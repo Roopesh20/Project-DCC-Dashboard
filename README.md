@@ -1,18 +1,25 @@
-# DCC Dashboard
+# DCC Health Dashboard
 
-A comprehensive dashboard for Distribution Control Center (DCC) operations monitoring and management.
+A comprehensive health monitoring dashboard for tracking personal health metrics and medication management.
 
 ## Overview
 
-The DCC Dashboard is a web-based application designed to provide real-time visibility and control for electricity distribution operations. This dashboard offers a centralized interface for monitoring critical metrics, managing outages, and optimizing distribution network performance.
+The DCC Health Dashboard is a web-based application designed to provide users with a centralized interface for monitoring vital health metrics, tracking medications, and visualizing health trends over time. This user-friendly dashboard allows individuals to take control of their health data and make informed decisions about their wellbeing.
 
 ## Features
 
-- **Real-time Monitoring**: Track key performance indicators and system status in real-time
-- **Interactive Maps**: Visualize the distribution network and outage locations with interactive mapping
-- **Incident Management**: Quickly identify and respond to network incidents and outages
-- **Performance Analytics**: View historical data trends and performance analytics
-- **Mobile Responsive**: Access the dashboard from any device with a responsive design
+- **Health Metrics Monitoring**: Track key health indicators including heart rate, blood pressure, and weight
+- **Medication Management**: View and manage medication schedules with reminders
+- **Health Trends**: Visualize health data over time with interactive charts (daily, weekly, monthly, quarterly views)
+- **User Authentication**: Secure login system to protect personal health information
+- **Responsive Design**: Access the dashboard from any device with a responsive layout
+
+## Screenshots
+
+![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/login-screen.jpg)
+![Dashboard View](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/dashboard-view.jpg)
+![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/medications-view.jpg)
+![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/trends-view.jpg)
 
 ## Technologies Used
 
@@ -21,7 +28,6 @@ The DCC Dashboard is a web-based application designed to provide real-time visib
 - JavaScript
 - Bootstrap 5
 - Chart.js (for data visualization)
-- Leaflet.js (for mapping functionality)
 
 ## Installation
 
@@ -39,36 +45,36 @@ To run this project locally:
 
 ## Usage
 
-The dashboard consists of multiple panels and widgets that provide different views of the distribution network:
+The dashboard consists of multiple sections designed for different aspects of health monitoring:
 
-- **Overview Panel**: Displays key metrics and system status
-- **Map View**: Shows the geographical layout of the distribution network
-- **Alerts Section**: Highlights critical incidents requiring attention
-- **Analytics Panel**: Provides charts and graphs for performance analysis
-
-## Screenshots
-
-![Dashboard Overview](screenshots/dashboard-overview.png)
-![Network Map](screenshots/network-map.png)
-![Analytics View](screenshots/analytics-view.png)
+- **Main Dashboard**: Displays current vital statistics (heart rate, blood pressure, weight)
+- **Medications**: Tracks medication schedules and reminders
+- **Trends**: Provides visual graphs of health metrics over time
+- **Providers**: Manage healthcare provider information
 
 ## Demo
 
 A live demo of the application is available at [https://roopesh20.github.io/Project-DCC-Dashboard/](https://roopesh20.github.io/Project-DCC-Dashboard/)
 
+Test the application with these credentials:
+- Email: demo@example.com
+- Password: (any password will work for the demo)
+- Or use the "Quick Demo Login" button
+
 ## Roadmap
 
-Future enhancements planned for the DCC Dashboard include:
+Future enhancements planned for the DCC Health Dashboard include:
 
-- Integration with SCADA systems for automated data collection
-- Advanced predictive analytics for outage prevention
+- Integration with wearable health devices for automated data collection
+- Medication reminder notifications
 - Mobile application development
-- User customizable dashboard layouts
-- API development for third-party integrations
+- Dietary and nutrition tracking
+- Exercise and activity monitoring
+- Export functionality for sharing data with healthcare providers
 
 ## Contributing
 
-Contributions to the DCC Dashboard project are welcome! Please follow these steps:
+Contributions to the DCC Health Dashboard project are welcome! Please follow these steps:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature-name`)
