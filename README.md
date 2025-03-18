@@ -16,10 +16,10 @@ The DCC Health Dashboard is a web-based application designed to provide users wi
 
 ## Screenshots
 
-![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/login-screen.jpg)
-![Dashboard View](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/dashboard-view.jpg)
-![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/medications-view.jpg)
-![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/screenshots/trends-view.jpg)
+![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Loginpage.png)
+![Dashboard View](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Dashboard.png)
+![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Medications.png)
+![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/HealthTrends.png)
 
 ## Technologies Used
 
