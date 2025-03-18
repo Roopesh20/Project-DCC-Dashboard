@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCC Health Dashboard - Login</title>
+    <style>
+        /* Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Auth Container Styles */
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4361ee;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: #4361ee;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+            margin-top: 5px;
+        }
+        
+        .button-primary {
+            background-color: #4361ee;
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background-color: #3a0ca3;
+        }
+        
+        .button-secondary {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+        
+        .button-secondary:hover {
+            background-color: #dee2e6;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .auth-link {
+            color: #4361ee;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-error {
+            background-color: #fdeeee;
+            color: #e63946;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        /* Screens */
+        .screen {
+            display: block;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .auth-container {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <span style="font-size: 3rem;">🏥</span>
+            </div>
+            <div class="auth-title">Sign in to DCC Dashboard</div>
+            <div id="login-error" class="auth-error"></div>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" value="demo@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" value="password123">
+                </div>
+                <button id="login-btn" class="button button-primary">Sign In</button>
+                <button id="demo-login-btn" class="button button-secondary" style="margin-top: 10px;">Quick Demo Login</button>
+            </div>
+            <div class="auth-footer">
+                <p>Don't have an account? <span id="goto-signup" class="auth-link">Create account</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="screen hidden">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <span style="font-size: 3rem;">🏥</span>
+            </div>
+            <div class="auth-title">Create your account</div>
+            <div id="register-error" class="auth-error"></div>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label for="register-name">Full Name</label>
+                    <input type="text" id="register-name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="register-age">Age</label>
+                    <input type="number" id="register-age" placeholder="Enter your age">
+                </div>
+                <div class="form-group">
+                    <label for="register-gender">Gender</label>
+                    <select id="register-gender">
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button id="register-btn" class="button button-primary">Create Account</button>
+            </div>
+            <div class="auth-footer">
+                <p>Already have an account? <span id="goto-login" class="auth-link">Sign in</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple user database
+        const users = [
+            {
+                email: 'demo@example.com',
+                password: 'password123',
+                name: 'John Doe',
+                age: 45,
+                gender: 'male'
+            }
+        ];
+        
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const registerScreen = document.getElementById('register-screen');
+        const loginBtn = document.getElementById('login-btn');
+        const demoLoginBtn = document.getElementById('demo-login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const gotoSignup = document.getElementById('goto-signup');
+        const gotoLogin = document.getElementById('goto-login');
+        const loginError = document.getElementById('login-error');
+        const registerError = document.getElementById('register-error');
+        
+        // Show Error Message
+        function showError(element, message) {
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+        
+        // Hide Error Message
+        function hideError(element) {
+            element.style.display = 'none';
+        }
+        
+        // Switch between screens
+        function showScreen(screen) {
+            if (screen === 'login') {
+                loginScreen.classList.remove('hidden');
+                registerScreen.classList.add('hidden');
+            } else if (screen === 'register') {
+                registerScreen.classList.remove('hidden');
+                loginScreen.classList.add('hidden');
+            }
+        }
+        
+        // Redirect to dashboard
+        function redirectToDashboard(userData) {
+            // You can set session data or tokens here if needed
+            localStorage.setItem('user', JSON.stringify(userData));
+            
+            // Redirect to your main dashboard
+            // Replace with your actual dashboard URL
+            window.location.href = 'dashboard.html';
+            
+            // For demo purposes if you don't have a dashboard.html yet
+            alert('Login successful! You would be redirected to your dashboard now.');
+        }
+        
+        // Initialize event listeners
+        function initializeEventListeners() {
+            // Login button
+            loginBtn.addEventListener('click', function() {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (!email || !password) {
+                    showError(loginError, 'Please enter both email and password');
+                    return;
+                }
+                
+                // Find user - in a real app, this would be a server call
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    hideError(loginError);
+                    redirectToDashboard(user);
+                } else {
+                    // For demo purposes, allow any login
+                    const fakeUser = {
+                        email: email,
+                        name: email.split('@')[0]
+                    };
+                    redirectToDashboard(fakeUser);
+                    
+                    // If you want to enforce real validation, uncomment this:
+                    // showError(loginError, 'Invalid email or password');
+                }
+            });
+            
+            // Demo login button
+            demoLoginBtn.addEventListener('click', function() {
+                const demoUser = users[0];
+                redirectToDashboard(demoUser);
+            });
+            
+            // Register button
+            registerBtn.addEventListener('click', function() {
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const age = document.getElementById('register-age').value;
+                const gender = document.getElementById('register-gender').value;
+                
+                if (!name || !email || !password || !age || !gender) {
+                    showError(registerError, 'Please fill in all fields');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showError(registerError, 'Password must be at least 6 characters');
+                    return;
+                }
+                
+                // In a real app, this would send data to your server
+                const newUser = {
+                    name: name,
+                    email: email,
+                    password: password,
+                    age: parseInt(age),
+                    gender: gender
+                };
+                
+                // Add to local storage for demo
+                users.push(newUser);
+                
+                // Redirect to dashboard
+                redirectToDashboard(newUser);
+            });
+            
+            // Navigation between screens
+            gotoSignup.addEventListener('click', function() {
+                hideError(loginError);
+                showScreen('register');
+            });
+            
+            gotoLogin.addEventListener('click', function() {
+                hideError(registerError);
+                showScreen('login');
+            });
+            
+            // Handle login with Enter key
+            document.getElementById('login-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+        });
+    </script>
+</body>
+</html>
