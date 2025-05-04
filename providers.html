@@ -1,524 +1,1520 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCC Health Dashboard - Healthcare Providers</title>
-    <style>
-        /* Base Styles and Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-            padding-bottom: 70px;
-        }
-        
-        /* Header Styles */
-        .header {
-            background-color: #4361ee;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo-icon {
-            margin-right: 10px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #3a0ca3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        
-        /* Page Title */
-        .page-title {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #343a40;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        /* Card Styles */
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f1f3f5;
-        }
-        
-        .card-title {
-            font-weight: bold;
-            color: #343a40;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        
-        .card-title-icon {
-            margin-right: 8px;
-            color: #4361ee;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Provider Card */
-        .provider-card {
-            display: flex;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            margin-bottom: 15px;
-        }
-        
-        .provider-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #4361ee;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-        
-        .provider-info {
-            flex: 1;
-        }
-        
-        .provider-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-        }
-        
-        .provider-specialty {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-        
-        .provider-contact {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        /* Appointment Card */
-        .appointment-card {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            margin-bottom: 15px;
-        }
-        
-        .appointment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .appointment-provider {
-            font-weight: bold;
-        }
-        
-        .appointment-timing {
-            color: #4361ee;
-            font-weight: 500;
-        }
-        
-        .appointment-date {
-            margin-bottom: 10px;
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        .appointment-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        /* Button Styles */
-        .button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .button-primary {
-            background-color: #4361ee;
-            color: white;
-        }
-        
-        .button-primary:hover {
-            background-color: #3a0ca3;
-        }
-        
-        .button-secondary {
-            background-color: #f1f3f5;
-            color: #6c757d;
-        }
-        
-        .button-secondary:hover {
-            background-color: #e9ecef;
-        }
-        
-        /* Navigation */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #6c757d;
-            text-decoration: none;
-            transition: color 0.3s;
-            cursor: pointer;
-        }
-        
-        .nav-item.active {
-            color: #4361ee;
-        }
-        
-        .nav-icon {
-            font-size: 1.5rem;
-            margin-bottom: 3px;
-        }
-        
-        .nav-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        
-        /* Updated navigation styles */
-        a.nav-item {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        a.nav-item:hover {
-            color: #4361ee;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .page-title {
-                font-size: 1.5rem;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .provider-contact {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .appointment-actions {
-                flex-direction: column;
-            }
-            
-            .appointment-actions .button {
-                width: 100%;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Providers - DCC Health Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #4338ca;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      margin: 0;
+      padding-bottom: 70px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h2 {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: background-color 0.2s;
+    }
+
+    .user-profile:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--gray-50);
+    }
+
+    .provider-item {
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .provider-item:last-child {
+      border-bottom: none;
+    }
+
+    .provider-info {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+
+    .provider-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--primary-light);
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-right: 1rem;
+    }
+
+    .provider-details {
+      flex: 1;
+    }
+
+    .provider-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .provider-specialty {
+      color: var(--gray-600);
+      margin-bottom: 0.75rem;
+    }
+
+    .provider-contact {
+      font-size: 0.9rem;
+    }
+
+    .contact-row {
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-label {
+      font-weight: 500;
+      color: var(--gray-500);
+      width: 60px;
+      display: inline-block;
+    }
+
+    .provider-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .appointment-item {
+      display: flex;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .appointment-item:last-child {
+      border-bottom: none;
+    }
+
+    .appointment-date {
+      width: 70px;
+      height: 70px;
+      background-color: var(--primary-light);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.5rem;
+    }
+
+    .date-day {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .date-month {
+      font-size: 0.9rem;
+    }
+
+    .appointment-details {
+      flex: 1;
+    }
+
+    .appointment-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .appointment-provider {
+      color: var(--gray-600);
+      margin-bottom: 0.25rem;
+    }
+
+    .appointment-time, .appointment-location {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-bottom: 0.25rem;
+    }
+
+    .appointment-notes {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      font-style: italic;
+    }
+
+    .appointment-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .provider-info {
+        flex-direction: column;
+      }
+      
+      .provider-avatar {
+        margin-bottom: 1rem;
+      }
+      
+      .provider-actions {
+        flex-wrap: wrap;
+      }
+      
+      .appointment-item {
+        flex-direction: column;
+      }
+      
+      .appointment-date {
+        margin-bottom: 1rem;
+      }
+      
+      .appointment-actions {
+        margin-top: 1rem;
+        flex-direction: row;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">🏥</span>
-                <span>DCC Dashboard</span>
-            </div>
-            <div class="user-profile" id="user-profile">
-                <div class="avatar" id="user-avatar">JD</div>
-                <span id="user-name">John Doe</span>
-            </div>
-        </div>
-    </header>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <div class="page-title">
-            <h1>Healthcare Providers</h1>
-            <button class="button button-primary" id="schedule-appointment-btn">Schedule Appointment</button>
-        </div>
-        
-        <!-- Care Team Card -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span class="card-title-icon">👨‍⚕️</span>
-                    <span>My Care Team</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="provider-card">
-                    <div class="provider-avatar" style="background-color: #4361ee;">
-                        DR
-                    </div>
-                    <div class="provider-info">
-                        <div class="provider-name">Dr. Rebecca Chen</div>
-                        <div class="provider-specialty">Cardiologist</div>
-                        <div>Primary care provider for heart health management</div>
-                        <div class="provider-contact">
-                            <button class="button button-primary">Message</button>
-                            <button class="button button-secondary">View Profile</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="provider-card">
-                    <div class="provider-avatar" style="background-color: #3a0ca3;">
-                        NT
-                    </div>
-                    <div class="provider-info">
-                        <div class="provider-name">Nurse Thompson</div>
-                        <div class="provider-specialty">Primary Care</div>
-                        <div>Assists with general health monitoring and medication management</div>
-                        <div class="provider-contact">
-                            <button class="button button-primary">Message</button>
-                            <button class="button button-secondary">View Profile</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="provider-card">
-                    <div class="provider-avatar" style="background-color: #2a9d8f;">
-                        DS
-                    </div>
-                    <div class="provider-info">
-                        <div class="provider-name">Dr. Smith</div>
-                        <div class="provider-specialty">Endocrinologist</div>
-                        <div>Specialized care for diabetes management</div>
-                        <div class="provider-contact">
-                            <button class="button button-primary">Message</button>
-                            <button class="button button-secondary">View Profile</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Upcoming Appointments Card -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span class="card-title-icon">📅</span>
-                    <span>Upcoming Appointments</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="appointment-card">
-                    <div class="appointment-header">
-                        <div class="appointment-provider">Dr. Rebecca Chen</div>
-                        <div class="appointment-timing">In 3 days</div>
-                    </div>
-                    <div class="appointment-date">March 14, 2025 • 10:30 AM</div>
-                    <div>Regular checkup to monitor heart condition and medication effectiveness</div>
-                    <div class="appointment-actions">
-                        <button class="button button-secondary">Reschedule</button>
-                        <button class="button button-primary">View Details</button>
-                    </div>
-                </div>
-                
-                <div class="appointment-card">
-                    <div class="appointment-header">
-                        <div class="appointment-provider">Nurse Thompson</div>
-                        <div class="appointment-timing">In 2 weeks</div>
-                    </div>
-                    <div class="appointment-date">March 25, 2025 • 2:00 PM</div>
-                    <div>Regular blood pressure monitoring and medication review</div>
-                    <div class="appointment-actions">
-                        <button class="button button-secondary">Reschedule</button>
-                        <button class="button button-primary">View Details</button>
-                    </div>
-                </div>
-                
-                <div class="appointment-card">
-                    <div class="appointment-header">
-                        <div class="appointment-provider">Dr. Smith</div>
-                        <div class="appointment-timing">In 1 month</div>
-                    </div>
-                    <div class="appointment-date">April 11, 2025 • 9:00 AM</div>
-                    <div>Quarterly diabetes checkup and blood work</div>
-                    <div class="appointment-actions">
-                        <button class="button button-secondary">Reschedule</button>
-                        <button class="button button-primary">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Appointment History Card -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span class="card-title-icon">🗓️</span>
-                    <span>Appointment History</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="appointment-card" style="opacity: 0.7;">
-                    <div class="appointment-header">
-                        <div class="appointment-provider">Dr. Rebecca Chen</div>
-                        <div class="appointment-timing">2 weeks ago</div>
-                    </div>
-                    <div class="appointment-date">February 25, 2025 • 10:30 AM</div>
-                    <div>Blood pressure review and medication adjustment</div>
-                    <div class="appointment-actions">
-                        <button class="button button-secondary">View Summary</button>
-                    </div>
-                </div>
-                
-                <div class="appointment-card" style="opacity: 0.7;">
-                    <div class="appointment-header">
-                        <div class="appointment-provider">Dr. Smith</div>
-                        <div class="appointment-timing">1 month ago</div>
-                    </div>
-                    <div class="appointment-date">February 11, 2025 • 9:00 AM</div>
-                    <div>Diabetes management review</div>
-                    <div class="appointment-actions">
-                        <button class="button button-secondary">View Summary</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<header>
+  <h2>Healthcare Providers</h2>
+  <div class="user-profile" id="user-profile">
+    <div class="avatar" id="user-avatar">JD</div>
+    <div id="username">John Doe</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">My Care Team</h3>
+      <button class="btn btn-primary" id="add-provider-btn">Add Provider</button>
     </div>
     
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Dashboard</div>
-        </a>
-        <a href="trends.html" class="nav-item">
-            <div class="nav-icon">📈</div>
-            <div class="nav-label">Trends</div>
-        </a>
-        <a href="medications.html" class="nav-item">
-            <div class="nav-icon">💊</div>
-            <div class="nav-label">Medications</div>
-        </a>
-        <a href="providers.html" class="nav-item active">
-            <div class="nav-icon">👨‍⚕️</div>
-            <div class="nav-label">Providers</div>
-        </a>
-        <a href="index.html" class="nav-item">
-            <div class="nav-icon">🚪</div>
-            <div class="nav-label">Logout</div>
-        </a>
-    </nav>
+    <div id="providers-list">
+      <div class="provider-item">
+        <div class="provider-info">
+          <div class="provider-avatar">RC</div>
+          <div class="provider-details">
+            <div class="provider-name">Dr. Rebecca Chen</div>
+            <div class="provider-specialty">Cardiologist</div>
+            <div class="provider-contact">
+              <div class="contact-row">
+                <span class="contact-label">Phone:</span>
+                <span class="contact-value">(555) 123-4567</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Email:</span>
+                <span class="contact-value">dr.chen@healthcare.com</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Office:</span>
+                <span class="contact-value">Fairborn Cardiology Center</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="provider-actions">
+          <button class="btn btn-primary" data-provider-id="1" data-action="message">Message</button>
+          <button class="btn btn-secondary" data-provider-id="1" data-action="edit">Edit</button>
+          <button class="btn btn-secondary" data-provider-id="1" data-action="schedule">Schedule</button>
+        </div>
+      </div>
+      
+      <div class="provider-item">
+        <div class="provider-info">
+          <div class="provider-avatar">NT</div>
+          <div class="provider-details">
+            <div class="provider-name">Nurse Thompson</div>
+            <div class="provider-specialty">Primary Care</div>
+            <div class="provider-contact">
+              <div class="contact-row">
+                <span class="contact-label">Phone:</span>
+                <span class="contact-value">(555) 987-6543</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Email:</span>
+                <span class="contact-value">nurse.thompson@healthcare.com</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Office:</span>
+                <span class="contact-value">Fairborn Family Medicine</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="provider-actions">
+          <button class="btn btn-primary" data-provider-id="2" data-action="message">Message</button>
+          <button class="btn btn-secondary" data-provider-id="2" data-action="edit">Edit</button>
+          <button class="btn btn-secondary" data-provider-id="2" data-action="schedule">Schedule</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Upcoming Appointments</h3>
+    </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load user data
-            const userDataString = localStorage.getItem('user');
-            
-            if (userDataString) {
-                try {
-                    const userData = JSON.parse(userDataString);
-                    
-                    if (userData.name) {
-                        document.getElementById('user-name').textContent = userData.name;
-                        
-                        const initials = userData.name.split(' ')
-                            .map(name => name[0])
-                            .join('')
-                            .toUpperCase();
-                        
-                        document.getElementById('user-avatar').textContent = initials;
-                    }
-                } catch (error) {
-                    console.error('Error parsing user data:', error);
+    <div id="appointments-list">
+      <div class="appointment-item">
+        <div class="appointment-date">
+          <div class="date-day">05</div>
+          <div class="date-month">May</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">Cardiology Checkup</div>
+          <div class="appointment-provider">Dr. Rebecca Chen</div>
+          <div class="appointment-time">10:30 AM - 11:15 AM</div>
+          <div class="appointment-location">Fairborn Cardiology Center</div>
+          <div class="appointment-notes">Bring recent blood work results</div>
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="1" data-action="reschedule">Reschedule</button>
+          <button class="btn btn-secondary" data-appointment-id="1" data-action="cancel">Cancel</button>
+        </div>
+      </div>
+      
+      <div class="appointment-item">
+        <div class="appointment-date">
+          <div class="date-day">12</div>
+          <div class="date-month">May</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">Diabetes Management</div>
+          <div class="appointment-provider">Dr. Smith</div>
+          <div class="appointment-time">2:00 PM - 2:45 PM</div>
+          <div class="appointment-location">Fairborn Diabetes Center</div>
+          <div class="appointment-notes">Follow-up on medication adjustment</div>
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="2" data-action="reschedule">Reschedule</button>
+          <button class="btn btn-secondary" data-appointment-id="2" data-action="cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Past Appointments</h3>
+    </div>
+    
+    <div id="past-appointments-list">
+      <div class="appointment-item">
+        <div class="appointment-date">
+          <div class="date-day">15</div>
+          <div class="date-month">Apr</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">Annual Physical</div>
+          <div class="appointment-provider">Nurse Thompson</div>
+          <div class="appointment-time">9:00 AM - 10:00 AM</div>
+          <div class="appointment-location">Fairborn Family Medicine</div>
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="3" data-action="summary">Summary</button>
+          <button class="btn btn-secondary" data-appointment-id="3" data-action="followup">Follow-up</button>
+        </div>
+      </div>
+      
+      <div class="appointment-item">
+        <div class="appointment-date">
+          <div class="date-day">05</div>
+          <div class="date-month">Apr</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">Cardiology Consultation</div>
+          <div class="appointment-provider">Dr. Rebecca Chen</div>
+          <div class="appointment-time">11:30 AM - 12:15 PM</div>
+          <div class="appointment-location">Fairborn Cardiology Center</div>
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="4" data-action="summary">Summary</button>
+          <button class="btn btn-secondary" data-appointment-id="4" data-action="followup">Follow-up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Provider Modal -->
+<div id="provider-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="provider-modal-title">Add Healthcare Provider</h3>
+      <span class="close-modal" id="close-provider-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="provider-name">Provider Name</label>
+        <input type="text" id="provider-name" class="form-control" placeholder="Enter provider name">
+      </div>
+      <div class="form-group">
+        <label for="provider-specialty">Specialty</label>
+        <input type="text" id="provider-specialty" class="form-control" placeholder="e.g., Cardiologist, Primary Care">
+      </div>
+      <div class="form-group">
+        <label for="provider-phone">Phone Number</label>
+        <input type="tel" id="provider-phone" class="form-control" placeholder="(555) 123-4567">
+      </div>
+      <div class="form-group">
+        <label for="provider-email">Email</label>
+        <input type="email" id="provider-email" class="form-control" placeholder="provider@example.com">
+      </div>
+      <div class="form-group">
+        <label for="provider-office">Office Location</label>
+        <input type="text" id="provider-office" class="form-control" placeholder="Enter office location">
+      </div>
+      <div class="form-group">
+        <label for="provider-notes">Notes (Optional)</label>
+        <textarea id="provider-notes" class="form-control" rows="3" placeholder="Additional notes about this provider"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-provider-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-provider-btn">Save Provider</button>
+    </div>
+  </div>
+</div>
+
+<!-- Message Modal -->
+<div id="message-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="message-modal-title">Message Provider</h3>
+      <span class="close-modal" id="close-message-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="message-subject">Subject</label>
+        <input type="text" id="message-subject" class="form-control" placeholder="Enter message subject">
+      </div>
+      <div class="form-group">
+        <label for="message-content">Message</label>
+        <textarea id="message-content" class="form-control" rows="5" placeholder="Type your message here"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-message-btn">Cancel</button>
+      <button class="btn btn-primary" id="send-message-btn">Send Message</button>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Modal -->
+<div id="schedule-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="schedule-modal-title">Schedule Appointment</h3>
+      <span class="close-modal" id="close-schedule-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="schedule-provider">Provider</label>
+        <input type="text" id="schedule-provider" class="form-control" readonly>
+      </div>
+      <div class="form-group">
+        <label for="schedule-type">Appointment Type</label>
+        <select id="schedule-type" class="form-control">
+          <option value="checkup">Regular Checkup</option>
+          <option value="consultation">Consultation</option>
+          <option value="followup">Follow-up</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group" id="schedule-other-container" style="display: none;">
+        <label for="schedule-other">Specify Appointment Type</label>
+        <input type="text" id="schedule-other" class="form-control" placeholder="Specify appointment type">
+      </div>
+      <div class="form-group">
+        <label for="schedule-date">Date</label>
+        <input type="date" id="schedule-date" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="schedule-time">Time</label>
+        <select id="schedule-time" class="form-control">
+          <option value="09:00">9:00 AM</option>
+          <option value="09:30">9:30 AM</option>
+          <option value="10:00">10:00 AM</option>
+          <option value="10:30">10:30 AM</option>
+          <option value="11:00">11:00 AM</option>
+          <option value="11:30">11:30 AM</option>
+          <option value="13:00">1:00 PM</option>
+          <option value="13:30">1:30 PM</option>
+          <option value="14:00">2:00 PM</option>
+          <option value="14:30">2:30 PM</option>
+          <option value="15:00">3:00 PM</option>
+          <option value="15:30">3:30 PM</option>
+          <option value="16:00">4:00 PM</option>
+          <option value="16:30">4:30 PM</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="schedule-notes">Notes</label>
+        <textarea id="schedule-notes" class="form-control" rows="3" placeholder="Add any notes for this appointment"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-schedule-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-schedule-btn">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Profile</h3>
+      <span class="close-modal" id="close-profile-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="profile-name">Full Name</label>
+        <input type="text" id="profile-name" class="form-control" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="profile-email">Email</label>
+        <input type="email" id="profile-email" class="form-control" placeholder="Enter your email">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-profile-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-profile-btn">Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">📊</div>
+    Dashboard
+  </a>
+  <a href="trends.html" class="nav-item">
+    <div class="nav-icon">📈</div>
+    Trends
+  </a>
+  <a href="medications.html" class="nav-item">
+    <div class="nav-icon">💊</div>
+    Medications
+  </a>
+  <a href="providers.html" class="nav-item active">
+    <div class="nav-icon">👨‍⚕️</div>
+    Providers
+  </a>
+  <a href="settings.html" class="nav-item">
+    <div class="nav-icon">⚙️</div>
+    Settings
+  </a>
+</div>
+
+<script>
+  // Provider and appointment data
+  const providers = [
+    {
+      id: 1,
+      name: 'Dr. Rebecca Chen',
+      specialty: 'Cardiologist',
+      phone: '(555) 123-4567',
+      email: 'dr.chen@healthcare.com',
+      office: 'Fairborn Cardiology Center',
+      notes: ''
+    },
+    {
+      id: 2,
+      name: 'Nurse Thompson',
+      specialty: 'Primary Care',
+      phone: '(555) 987-6543',
+      email: 'nurse.thompson@healthcare.com',
+      office: 'Fairborn Family Medicine',
+      notes: ''
+    }
+  ];
+  
+  const appointments = [
+    {
+      id: 1,
+      providerId: 1,
+      title: 'Cardiology Checkup',
+      date: '2025-05-05',
+      startTime: '10:30',
+      endTime: '11:15',
+      location: 'Fairborn Cardiology Center',
+      notes: 'Bring recent blood work results',
+      status: 'upcoming'
+    },
+    {
+      id: 2,
+      providerId: 3, // Dr. Smith is not in the providers list yet
+      title: 'Diabetes Management',
+      date: '2025-05-12',
+      startTime: '14:00',
+      endTime: '14:45',
+      location: 'Fairborn Diabetes Center',
+      notes: 'Follow-up on medication adjustment',
+      status: 'upcoming'
+    },
+    {
+      id: 3,
+      providerId: 2,
+      title: 'Annual Physical',
+      date: '2025-04-15',
+      startTime: '09:00',
+      endTime: '10:00',
+      location: 'Fairborn Family Medicine',
+      notes: '',
+      status: 'completed'
+    },
+    {
+      id: 4,
+      providerId: 1,
+      title: 'Cardiology Consultation',
+      date: '2025-04-05',
+      startTime: '11:30',
+      endTime: '12:15',
+      location: 'Fairborn Cardiology Center',
+      notes: '',
+      status: 'completed'
+    }
+  ];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize elements
+    const userProfile = document.getElementById('user-profile');
+    const profileModal = document.getElementById('profile-modal');
+    const closeProfileModal = document.getElementById('close-profile-modal');
+    const cancelProfileBtn = document.getElementById('cancel-profile-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const profileNameInput = document.getElementById('profile-name');
+    const profileEmailInput = document.getElementById('profile-email');
+    
+    const addProviderBtn = document.getElementById('add-provider-btn');
+    const providerModal = document.getElementById('provider-modal');
+    const closeProviderModal = document.getElementById('close-provider-modal');
+    const cancelProviderBtn = document.getElementById('cancel-provider-btn');
+    const saveProviderBtn = document.getElementById('save-provider-btn');
+    const providerModalTitle = document.getElementById('provider-modal-title');
+    
+    const messageModal = document.getElementById('message-modal');
+    const closeMessageModal = document.getElementById('close-message-modal');
+    const cancelMessageBtn = document.getElementById('cancel-message-btn');
+    const sendMessageBtn = document.getElementById('send-message-btn');
+    const messageModalTitle = document.getElementById('message-modal-title');
+    
+    const scheduleModal = document.getElementById('schedule-modal');
+    const closeScheduleModal = document.getElementById('close-schedule-modal');
+    const cancelScheduleBtn = document.getElementById('cancel-schedule-btn');
+    const saveScheduleBtn = document.getElementById('save-schedule-btn');
+    const scheduleTypeSelect = document.getElementById('schedule-type');
+    const scheduleOtherContainer = document.getElementById('schedule-other-container');
+    
+    // Check for logged in user and update profile
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+      try {
+        const userData = JSON.parse(loggedInUser);
+        if (userData.name) {
+          document.getElementById('username').textContent = userData.name;
+          // Get initials for avatar
+          const initials = userData.name.split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase();
+          document.getElementById('user-avatar').textContent = initials;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    
+    // Add provider button
+    addProviderBtn.addEventListener('click', function() {
+      // Set modal title to add
+      providerModalTitle.textContent = 'Add Healthcare Provider';
+      
+      // Reset form
+      document.getElementById('provider-name').value = '';
+      document.getElementById('provider-specialty').value = '';
+      document.getElementById('provider-phone').value = '';
+      document.getElementById('provider-email').value = '';
+      document.getElementById('provider-office').value = '';
+      document.getElementById('provider-notes').value = '';
+      
+      // Remove any stored provider ID
+      saveProviderBtn.removeAttribute('data-provider-id');
+      
+      // Show the modal
+      providerModal.style.display = 'block';
+    });
+    
+    // Close provider modal
+    closeProviderModal.addEventListener('click', function() {
+      providerModal.style.display = 'none';
+    });
+    
+    // Cancel provider button
+    cancelProviderBtn.addEventListener('click', function() {
+      providerModal.style.display = 'none';
+    });
+    
+    // Save provider button
+    saveProviderBtn.addEventListener('click', function() {
+      // Get form values
+      const name = document.getElementById('provider-name').value.trim();
+      const specialty = document.getElementById('provider-specialty').value.trim();
+      const phone = document.getElementById('provider-phone').value.trim();
+      const email = document.getElementById('provider-email').value.trim();
+      const office = document.getElementById('provider-office').value.trim();
+      const notes = document.getElementById('provider-notes').value.trim();
+      
+      // Validate required fields
+      if (!name || !specialty || !phone || !email || !office) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Check if editing or adding
+      const providerId = this.getAttribute('data-provider-id');
+      
+      if (providerId) {
+        // Editing existing provider
+        const providerIndex = providers.findIndex(provider => provider.id === parseInt(providerId));
+        
+        if (providerIndex !== -1) {
+          providers[providerIndex] = {
+            ...providers[providerIndex],
+            name,
+            specialty,
+            phone,
+            email,
+            office,
+            notes
+          };
+          
+          // Show temporary notification
+          alert(`Updated ${name}`);
+        }
+      } else {
+        // Adding new provider
+        const newId = providers.length > 0 ? Math.max(...providers.map(provider => provider.id)) + 1 : 1;
+        
+        const newProvider = {
+          id: newId,
+          name,
+          specialty,phone,
+          email,
+          office,
+          notes
+        };
+        
+        providers.push(newProvider);
+        
+        // Show temporary notification
+        alert(`Added ${name}`);
+      }
+      
+      // Update providers display
+      renderProviders();
+      
+      // Close the modal
+      providerModal.style.display = 'none';
+    });
+    
+    // Provider action buttons
+    document.querySelectorAll('.provider-actions button').forEach(button => {
+      button.addEventListener('click', function() {
+        const providerId = parseInt(this.getAttribute('data-provider-id'));
+        const action = this.getAttribute('data-action');
+        const provider = providers.find(provider => provider.id === providerId);
+        
+        if (provider) {
+          switch (action) {
+            case 'message':
+              // Open message modal
+              messageModalTitle.textContent = `Message ${provider.name}`;
+              document.getElementById('message-subject').value = '';
+              document.getElementById('message-content').value = '';
+              sendMessageBtn.setAttribute('data-provider-id', providerId);
+              messageModal.style.display = 'block';
+              break;
+            case 'edit':
+              // Open provider modal
+              providerModalTitle.textContent = 'Edit Healthcare Provider';
+              document.getElementById('provider-name').value = provider.name;
+              document.getElementById('provider-specialty').value = provider.specialty;
+              document.getElementById('provider-phone').value = provider.phone;
+              document.getElementById('provider-email').value = provider.email;
+              document.getElementById('provider-office').value = provider.office;
+              document.getElementById('provider-notes').value = provider.notes;
+              saveProviderBtn.setAttribute('data-provider-id', providerId);
+              providerModal.style.display = 'block';
+              break;
+            case 'schedule':
+              // Open schedule modal
+              document.getElementById('schedule-provider').value = provider.name;
+              document.getElementById('schedule-type').value = 'checkup';
+              scheduleOtherContainer.style.display = 'none';
+              document.getElementById('schedule-other').value = '';
+              
+              // Set date to tomorrow
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              document.getElementById('schedule-date').value = tomorrow.toISOString().split('T')[0];
+              
+              document.getElementById('schedule-time').value = '09:00';
+              document.getElementById('schedule-notes').value = '';
+              saveScheduleBtn.setAttribute('data-provider-id', providerId);
+              scheduleModal.style.display = 'block';
+              break;
+          }
+        }
+      });
+    });
+    
+    // Appointment action buttons
+    document.querySelectorAll('.appointment-actions button').forEach(button => {
+      button.addEventListener('click', function() {
+        const appointmentId = parseInt(this.getAttribute('data-appointment-id'));
+        const action = this.getAttribute('data-action');
+        const appointment = appointments.find(appt => appt.id === appointmentId);
+        
+        if (appointment) {
+          switch (action) {
+            case 'reschedule':
+              alert(`Rescheduling appointment: ${appointment.title}`);
+              // In a real app, this would open a scheduling modal
+              break;
+            case 'cancel':
+              if (confirm(`Are you sure you want to cancel this appointment: ${appointment.title}?`)) {
+                // Remove appointment
+                const appointmentIndex = appointments.findIndex(appt => appt.id === appointmentId);
+                if (appointmentIndex !== -1) {
+                  appointments.splice(appointmentIndex, 1);
+                  // Update display
+                  renderAppointments();
+                  alert('Appointment canceled successfully');
                 }
-            }
-            
-            // Schedule appointment button
-            document.getElementById('schedule-appointment-btn').addEventListener('click', function() {
-                alert('Schedule appointment functionality will be implemented in the future.');
-            });
-        });
-    </script>
+              }
+              break;
+            case 'summary':
+              alert(`Appointment summary for: ${appointment.title}`);
+              // In a real app, this would show appointment summary
+              break;
+            case 'followup':
+              alert(`Scheduling a follow-up for: ${appointment.title}`);
+              // In a real app, this would open a scheduling modal
+              break;
+          }
+        }
+      });
+    });
+    
+    // Close message modal
+    closeMessageModal.addEventListener('click', function() {
+      messageModal.style.display = 'none';
+    });
+    
+    // Cancel message button
+    cancelMessageBtn.addEventListener('click', function() {
+      messageModal.style.display = 'none';
+    });
+    
+    // Send message button
+    sendMessageBtn.addEventListener('click', function() {
+      const subject = document.getElementById('message-subject').value.trim();
+      const content = document.getElementById('message-content').value.trim();
+      
+      if (!subject || !content) {
+        alert('Please enter a subject and message content');
+        return;
+      }
+      
+      const providerId = parseInt(this.getAttribute('data-provider-id'));
+      const provider = providers.find(provider => provider.id === providerId);
+      
+      if (provider) {
+        // In a real app, this would send the message to the provider
+        alert(`Message sent to ${provider.name}: ${subject}`);
+        
+        // Close modal
+        messageModal.style.display = 'none';
+      }
+    });
+    
+    // Schedule type change
+    scheduleTypeSelect.addEventListener('change', function() {
+      if (this.value === 'other') {
+        scheduleOtherContainer.style.display = 'block';
+      } else {
+        scheduleOtherContainer.style.display = 'none';
+      }
+    });
+    
+    // Close schedule modal
+    closeScheduleModal.addEventListener('click', function() {
+      scheduleModal.style.display = 'none';
+    });
+    
+    // Cancel schedule button
+    cancelScheduleBtn.addEventListener('click', function() {
+      scheduleModal.style.display = 'none';
+    });
+    
+    // Save schedule button
+    saveScheduleBtn.addEventListener('click', function() {
+      const providerId = parseInt(this.getAttribute('data-provider-id'));
+      const provider = providers.find(provider => provider.id === providerId);
+      
+      if (!provider) {
+        alert('Provider not found');
+        return;
+      }
+      
+      const type = document.getElementById('schedule-type').value;
+      let title;
+      
+      if (type === 'other') {
+        title = document.getElementById('schedule-other').value.trim();
+        if (!title) {
+          alert('Please specify the appointment type');
+          return;
+        }
+      } else {
+        title = {
+          'checkup': 'Regular Checkup',
+          'consultation': 'Consultation',
+          'followup': 'Follow-up'
+        }[type];
+      }
+      
+      const date = document.getElementById('schedule-date').value;
+      if (!date) {
+        alert('Please select a date');
+        return;
+      }
+      
+      const startTime = document.getElementById('schedule-time').value;
+      
+      // Calculate end time (45 minutes after start)
+      const [hours, minutes] = startTime.split(':').map(num => parseInt(num));
+      let endHours = hours;
+      let endMinutes = minutes + 45;
+      
+      if (endMinutes >= 60) {
+        endHours += 1;
+        endMinutes -= 60;
+      }
+      
+      const endTime = `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+      
+      const notes = document.getElementById('schedule-notes').value.trim();
+      
+      // Create new appointment
+      const newId = appointments.length > 0 ? Math.max(...appointments.map(appt => appt.id)) + 1 : 1;
+      
+      const newAppointment = {
+        id: newId,
+        providerId,
+        title,
+        date,
+        startTime,
+        endTime,
+        location: provider.office,
+        notes,
+        status: 'upcoming'
+      };
+      
+      appointments.push(newAppointment);
+      
+      // Update display
+      renderAppointments();
+      
+      // Close modal
+      scheduleModal.style.display = 'none';
+      
+      // Show success message
+      alert(`Appointment scheduled with ${provider.name} on ${formatDate(date)} at ${formatTime(startTime)}`);
+    });
+    
+    // Open profile modal when user profile is clicked
+    userProfile.addEventListener('click', function() {
+      // Populate form with current user data
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        try {
+          const userData = JSON.parse(loggedInUser);
+          profileNameInput.value = userData.name || '';
+          profileEmailInput.value = userData.email || '';
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+      
+      profileModal.style.display = 'block';
+    });
+    
+    // Close profile modal
+    closeProfileModal.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Cancel profile button
+    cancelProfileBtn.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Save profile button
+    saveProfileBtn.addEventListener('click', function() {
+      const name = profileNameInput.value.trim();
+      const email = profileEmailInput.value.trim();
+      
+      if (name === '') {
+        alert('Please enter your name');
+        return;
+      }
+      
+      // Save to localStorage
+      try {
+        let userData = {};
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        
+        if (loggedInUser) {
+          userData = JSON.parse(loggedInUser);
+        }
+        
+        userData.name = name;
+        if (email !== '') {
+          userData.email = email;
+        }
+        
+        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+        
+        // Update display
+        document.getElementById('username').textContent = name;
+        
+        // Update avatar with initials
+        const initials = name.split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase();
+        document.getElementById('user-avatar').textContent = initials;
+        
+        // Close modal
+        profileModal.style.display = 'none';
+        
+        // Show success message
+        alert('Profile updated successfully');
+      } catch (error) {
+        console.error('Error saving profile data:', error);
+        alert('An error occurred while saving your profile');
+      }
+    });
+    
+    // Close modals if clicked outside
+    window.addEventListener('click', function(event) {
+      if (event.target === providerModal) {
+        providerModal.style.display = 'none';
+      }
+      if (event.target === messageModal) {
+        messageModal.style.display = 'none';
+      }
+      if (event.target === scheduleModal) {
+        scheduleModal.style.display = 'none';
+      }
+      if (event.target === profileModal) {
+        profileModal.style.display = 'none';
+      }
+    });
+    
+    // Initialize the providers and appointments
+    renderProviders();
+    renderAppointments();
+  });
+
+  // Function to render providers
+  function renderProviders() {
+    const providersList = document.getElementById('providers-list');
+    providersList.innerHTML = '';
+    
+    providers.forEach(provider => {
+      const providerItem = document.createElement('div');
+      providerItem.className = 'provider-item';
+      
+      // Get provider initials
+      const initials = provider.name.split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase();
+      
+      providerItem.innerHTML = `
+        <div class="provider-info">
+          <div class="provider-avatar">${initials}</div>
+          <div class="provider-details">
+            <div class="provider-name">${provider.name}</div>
+            <div class="provider-specialty">${provider.specialty}</div>
+            <div class="provider-contact">
+              <div class="contact-row">
+                <span class="contact-label">Phone:</span>
+                <span class="contact-value">${provider.phone}</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Email:</span>
+                <span class="contact-value">${provider.email}</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Office:</span>
+                <span class="contact-value">${provider.office}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="provider-actions">
+          <button class="btn btn-primary" data-provider-id="${provider.id}" data-action="message">Message</button>
+          <button class="btn btn-secondary" data-provider-id="${provider.id}" data-action="edit">Edit</button>
+          <button class="btn btn-secondary" data-provider-id="${provider.id}" data-action="schedule">Schedule</button>
+        </div>
+      `;
+      
+      providersList.appendChild(providerItem);
+    });
+    
+    // Re-attach event listeners
+    document.querySelectorAll('.provider-actions button').forEach(button => {
+      button.addEventListener('click', function() {
+        const providerId = parseInt(this.getAttribute('data-provider-id'));
+        const action = this.getAttribute('data-action');
+        const provider = providers.find(provider => provider.id === providerId);
+        
+        if (provider) {
+          switch (action) {
+            case 'message':
+              // Open message modal
+              document.getElementById('message-modal-title').textContent = `Message ${provider.name}`;
+              document.getElementById('message-subject').value = '';
+              document.getElementById('message-content').value = '';
+              document.getElementById('send-message-btn').setAttribute('data-provider-id', providerId);
+              document.getElementById('message-modal').style.display = 'block';
+              break;
+            case 'edit':
+              // Open provider modal
+              document.getElementById('provider-modal-title').textContent = 'Edit Healthcare Provider';
+              document.getElementById('provider-name').value = provider.name;
+              document.getElementById('provider-specialty').value = provider.specialty;
+              document.getElementById('provider-phone').value = provider.phone;
+              document.getElementById('provider-email').value = provider.email;
+              document.getElementById('provider-office').value = provider.office;
+              document.getElementById('provider-notes').value = provider.notes;
+              document.getElementById('save-provider-btn').setAttribute('data-provider-id', providerId);
+              document.getElementById('provider-modal').style.display = 'block';
+              break;
+            case 'schedule':
+              // Open schedule modal
+              document.getElementById('schedule-provider').value = provider.name;
+              document.getElementById('schedule-type').value = 'checkup';
+              document.getElementById('schedule-other-container').style.display = 'none';
+              document.getElementById('schedule-other').value = '';
+              
+              // Set date to tomorrow
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              document.getElementById('schedule-date').value = tomorrow.toISOString().split('T')[0];
+              
+              document.getElementById('schedule-time').value = '09:00';
+              document.getElementById('schedule-notes').value = '';
+              document.getElementById('save-schedule-btn').setAttribute('data-provider-id', providerId);
+              document.getElementById('schedule-modal').style.display = 'block';
+              break;
+          }
+        }
+      });
+    });
+  }
+
+  // Function to render appointments
+  function renderAppointments() {
+    const upcomingList = document.getElementById('appointments-list');
+    const pastList = document.getElementById('past-appointments-list');
+    
+    upcomingList.innerHTML = '';
+    pastList.innerHTML = '';
+    
+    // Filter upcoming and past appointments
+    const upcomingAppointments = appointments.filter(appt => appt.status === 'upcoming');
+    const pastAppointments = appointments.filter(appt => appt.status === 'completed');
+    
+    // Sort appointments by date
+    upcomingAppointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+    pastAppointments.sort((a, b) => new Date(b.date) - new Date(a.date)); // Past appointments in reverse order
+    
+    // Render upcoming appointments
+    upcomingAppointments.forEach(appt => {
+      const appointmentItem = document.createElement('div');
+      appointmentItem.className = 'appointment-item';
+      
+      const date = new Date(appt.date);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()];
+      
+      // Find provider
+      const provider = providers.find(p => p.id === appt.providerId);
+      const providerName = provider ? provider.name : 'Unknown Provider';
+      
+      appointmentItem.innerHTML = `
+        <div class="appointment-date">
+          <div class="date-day">${day}</div>
+          <div class="date-month">${month}</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">${appt.title}</div>
+          <div class="appointment-provider">${providerName}</div>
+          <div class="appointment-time">${formatTime(appt.startTime)} - ${formatTime(appt.endTime)}</div>
+          <div class="appointment-location">${appt.location}</div>
+          ${appt.notes ? `<div class="appointment-notes">${appt.notes}</div>` : ''}
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="${appt.id}" data-action="reschedule">Reschedule</button>
+          <button class="btn btn-secondary" data-appointment-id="${appt.id}" data-action="cancel">Cancel</button>
+        </div>
+      `;
+      
+      upcomingList.appendChild(appointmentItem);
+    });
+    
+    // Render past appointments
+    pastAppointments.forEach(appt => {
+      const appointmentItem = document.createElement('div');
+      appointmentItem.className = 'appointment-item';
+      
+      const date = new Date(appt.date);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][date.getMonth()];
+      
+      // Find provider
+      const provider = providers.find(p => p.id === appt.providerId);
+      const providerName = provider ? provider.name : 'Unknown Provider';
+      
+      appointmentItem.innerHTML = `
+        <div class="appointment-date">
+          <div class="date-day">${day}</div>
+          <div class="date-month">${month}</div>
+        </div>
+        <div class="appointment-details">
+          <div class="appointment-title">${appt.title}</div>
+          <div class="appointment-provider">${providerName}</div>
+          <div class="appointment-time">${formatTime(appt.startTime)} - ${formatTime(appt.endTime)}</div>
+          <div class="appointment-location">${appt.location}</div>
+        </div>
+        <div class="appointment-actions">
+          <button class="btn btn-primary" data-appointment-id="${appt.id}" data-action="summary">Summary</button>
+          <button class="btn btn-secondary" data-appointment-id="${appt.id}" data-action="followup">Follow-up</button>
+        </div>
+      `;
+      
+      pastList.appendChild(appointmentItem);
+    });
+    
+    // Re-attach event listeners
+    document.querySelectorAll('.appointment-actions button').forEach(button => {
+      button.addEventListener('click', function() {
+        const appointmentId = parseInt(this.getAttribute('data-appointment-id'));
+        const action = this.getAttribute('data-action');
+        const appointment = appointments.find(appt => appt.id === appointmentId);
+        
+        if (appointment) {
+          switch (action) {
+            case 'reschedule':
+              alert(`Rescheduling appointment: ${appointment.title}`);
+              // In a real app, this would open a scheduling modal
+              break;
+            case 'cancel':
+              if (confirm(`Are you sure you want to cancel this appointment: ${appointment.title}?`)) {
+                // Remove appointment
+                const appointmentIndex = appointments.findIndex(appt => appt.id === appointmentId);
+                if (appointmentIndex !== -1) {
+                  appointments.splice(appointmentIndex, 1);
+                  // Update display
+                  renderAppointments();
+                  alert('Appointment canceled successfully');
+                }
+              }
+              break;
+            case 'summary':
+              alert(`Appointment summary for: ${appointment.title}`);
+              // In a real app, this would show appointment summary
+              break;
+            case 'followup':
+              alert(`Scheduling a follow-up for: ${appointment.title}`);
+              // In a real app, this would open a scheduling modal
+              break;
+          }
+        }
+      });
+    });
+  }
+
+  // Helper function to format date
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  // Helper function to format time
+  function formatTime(timeStr) {
+    if (!timeStr) return '';
+    
+    try {
+      const [hours, minutes] = timeStr.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const hour12 = hour % 12 || 12;
+      
+      return `${hour12}:${minutes} ${ampm}`;
+    } catch (error) {
+      return timeStr;
+    }
+  }
+</script>
+
 </body>
 </html>
