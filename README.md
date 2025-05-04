@@ -16,10 +16,20 @@ The DCC Health Dashboard is a web-based application designed to provide users wi
 
 ## Screenshots
 
-![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Loginpage.png)
+![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Login.png)
+![Create_Account Profile](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount1.png)
+![Create Account DOB](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount2.png)
+![Create Account Health_data](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount3.png)
 ![Dashboard View](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Dashboard.png)
-![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Medications.png)
-![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/HealthTrends.png)
+![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Medications1.png)
+![Medications](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Medications2.png)
+![Health Providers](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/HealthProviders1.png)
+![Health Providers](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/HealthProviders2.png)
+![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Trends1.png)
+![Health Trends](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Trends2.png)
+![Settings](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Settings1.png)
+![Settings](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Settings2.png)
+![Settings](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Settings3.png)
 
 ## Technologies Used
 
