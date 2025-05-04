@@ -1,0 +1,2047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings - DCC Health Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #4338ca;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      margin: 0;
+      padding-bottom: 70px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h2 {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: background-color 0.2s;
+    }
+
+    .user-profile:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .settings-section {
+      padding: 1rem 0;
+    }
+
+    .settings-group {
+      margin-bottom: 2rem;
+    }
+
+    .settings-group h4 {
+      font-size: 1.1rem;
+      color: var(--gray-700);
+      margin-bottom: 1rem;
+    }
+
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .settings-row:last-child {
+      border-bottom: none;
+    }
+
+    .settings-label {
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .settings-value {
+      color: var(--gray-600);
+      margin-right: auto;
+      margin-left: 2rem;
+    }
+
+    .settings-toggle {
+      display: flex;
+      align-items: center;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--gray-300);
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--primary);
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px var(--primary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    .action-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      background-color: var(--gray-100);
+      color: var(--gray-700);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--gray-300);
+    }
+
+    .action-btn:hover {
+      background-color: var(--gray-200);
+    }
+
+    .device-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .device-item:last-child {
+      border-bottom: none;
+    }
+
+    .device-info {
+      flex: 1;
+    }
+
+    .device-name {
+      font-weight: 500;
+      color: var(--gray-800);
+      margin-bottom: 0.25rem;
+    }
+
+    .device-status {
+      font-size: 0.9rem;
+      color: var(--success);
+      margin-bottom: 0.25rem;
+    }
+
+    .device-last-sync {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+    }
+
+    .device-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .device-add {
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0;
+    }
+
+    .account-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--gray-50);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .form-col {
+      flex: 1;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      margin-top: 0.25rem;
+    }
+
+    .form-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      display: none;
+    }
+
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid white;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--success);
+      color: white;
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .notification.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .notification.error {
+      background-color: var(--danger);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .settings-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .settings-value {
+        margin-left: 0;
+        margin-top: 0.25rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .device-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .device-actions {
+        margin-top: 1rem;
+        width: 100%;
+      }
+      
+      .device-actions .btn {
+        flex: 1;
+      }
+      
+      .account-actions {
+        flex-direction: column;
+      }
+      
+      .account-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>Settings</h2>
+  <div class="user-profile" id="user-profile">
+    <div class="avatar" id="user-avatar">JD</div>
+    <div id="username">John Doe</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Account Settings</h3>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-group">
+        <h4>Profile Information</h4>
+        <div class="settings-row">
+          <div class="settings-label">Full Name</div>
+          <div class="settings-value" id="settings-name">John Doe</div>
+          <button class="action-btn" id="edit-profile-info-btn">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Email</div>
+          <div class="settings-value" id="settings-email">john.doe@example.com</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Phone</div>
+          <div class="settings-value" id="settings-phone">(555) 123-4567</div>
+        </div>
+      </div>
+      
+      <div class="settings-group">
+        <h4>Security</h4>
+        <div class="settings-row">
+          <div class="settings-label">Password</div>
+          <div class="settings-value">••••••••</div>
+          <button class="action-btn" id="change-password-btn">Change</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Two-Factor Authentication</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="tfa-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Health Data</h3>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-group">
+        <h4>Health Metrics</h4>
+        <div class="settings-row">
+          <div class="settings-label">Height</div>
+          <div class="settings-value" id="settings-height">5' 10"</div>
+          <button class="action-btn" id="edit-health-metrics-btn">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Weight</div>
+          <div class="settings-value" id="settings-weight">165 lbs</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Blood Type</div>
+          <div class="settings-value" id="settings-blood-type">A+</div>
+        </div>
+      </div>
+      
+      <div class="settings-group">
+        <h4>Health Conditions</h4>
+        <div class="settings-row">
+          <div class="settings-label">Conditions</div>
+          <div class="settings-value" id="settings-conditions">Hypertension</div>
+          <button class="action-btn" id="edit-health-conditions-btn">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Allergies</div>
+          <div class="settings-value" id="settings-allergies">Penicillin</div>
+        </div>
+      </div>
+      
+      <div class="settings-group">
+        <h4>Emergency Contact</h4>
+        <div class="settings-row">
+          <div class="settings-label">Name</div>
+          <div class="settings-value" id="settings-emergency-name">Jane Doe</div>
+          <button class="action-btn" id="edit-emergency-contact-btn">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Relationship</div>
+          <div class="settings-value" id="settings-emergency-relationship">Spouse</div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Phone</div>
+          <div class="settings-value" id="settings-emergency-phone">(555) 987-6543</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Notifications & Privacy</h3>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-group">
+        <h4>Notification Preferences</h4>
+        <div class="settings-row">
+          <div class="settings-label">Medication Reminders</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="med-reminders-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Appointment Reminders</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="appointment-reminders-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Health Insights</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="insights-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="settings-group">
+        <h4>Privacy Settings</h4>
+        <div class="settings-row">
+          <div class="settings-label">Share Data with Providers</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="share-providers-toggle" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-label">Anonymized Research Data</div>
+          <div class="settings-toggle">
+            <label class="switch">
+              <input type="checkbox" id="research-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Connected Devices</h3>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-group">
+        <h4>Devices</h4>
+        <div id="devices-list">
+          <div class="device-item">
+            <div class="device-info">
+              <div class="device-name">Fitbit Charge 5</div>
+              <div class="device-status">Connected</div>
+              <div class="device-last-sync">Last synced: Today, 9:15 AM</div>
+            </div>
+            <div class="device-actions">
+              <button class="btn btn-primary" data-device-id="1" id="sync-device-1">Sync Now</button>
+              <button class="btn btn-secondary" data-device-id="1" id="disconnect-device-1">Disconnect</button>
+            </div>
+          </div>
+          
+          <div class="device-item">
+            <div class="device-info">
+              <div class="device-name">Omron Blood Pressure Monitor</div>
+              <div class="device-status">Connected</div>
+              <div class="device-last-sync">Last synced: Yesterday, 8:30 PM</div>
+            </div>
+            <div class="device-actions">
+              <button class="btn btn-primary" data-device-id="2" id="sync-device-2">Sync Now</button>
+              <button class="btn btn-secondary" data-device-id="2" id="disconnect-device-2">Disconnect</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="device-add">
+          <button class="btn btn-primary" id="add-device-btn">
+            <span class="device-add-icon">+</span> Add New Device
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Account Actions</h3>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-group">
+        <div class="account-actions">
+          <button class="btn btn-secondary" id="export-health-data-btn">Export Health Data</button>
+          <button class="btn btn-secondary" id="delete-account-btn">Delete Account</button>
+          <button class="btn btn-primary" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Info Modal -->
+<div id="profile-info-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Profile Information</h3>
+      <span class="close-modal" id="close-profile-info-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="edit-name">Full Name</label>
+        <input type="text" id="edit-name" class="form-control" placeholder="Enter your full name">
+        <div class="form-error" id="edit-name-error">Please enter a valid name</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-email">Email</label>
+        <input type="email" id="edit-email" class="form-control" placeholder="Enter your email">
+        <div class="form-error" id="edit-email-error">Please enter a valid email address</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-phone">Phone</label>
+        <input type="tel" id="edit-phone" class="form-control" placeholder="Enter your phone number">
+        <div class="form-error" id="edit-phone-error">Please enter a valid phone number</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-profile-info-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-profile-info-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Health Metrics Modal -->
+<div id="health-metrics-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Health Metrics</h3>
+      <span class="close-modal" id="close-health-metrics-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Height</label>
+        <div class="form-row">
+          <div class="form-col">
+            <input type="number" id="edit-height-ft" class="form-control" placeholder="ft" min="1" max="8">
+          </div>
+          <div class="form-col">
+            <input type="number" id="edit-height-in" class="form-control" placeholder="in" min="0" max="11">
+          </div>
+        </div>
+        <div class="form-error" id="edit-height-error">Please enter a valid height</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-weight">Weight (lbs)</label>
+        <input type="number" id="edit-weight" class="form-control" placeholder="Enter weight">
+        <div class="form-error" id="edit-weight-error">Please enter a valid weight</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-blood-type">Blood Type</label>
+        <select id="edit-blood-type" class="form-control">
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-health-metrics-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-health-metrics-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Health Conditions Modal -->
+<div id="health-conditions-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Health Conditions</h3>
+      <span class="close-modal" id="close-health-conditions-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="edit-conditions">Health Conditions</label>
+        <textarea id="edit-conditions" class="form-control" rows="3" placeholder="Enter health conditions"></textarea>
+        <div class="form-text">Separate multiple conditions with commas</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-allergies">Allergies</label>
+        <textarea id="edit-allergies" class="form-control" rows="3" placeholder="Enter allergies"></textarea>
+        <div class="form-text">Separate multiple allergies with commas</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-health-conditions-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-health-conditions-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Emergency Contact Modal -->
+<div id="emergency-contact-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Emergency Contact</h3>
+      <span class="close-modal" id="close-emergency-contact-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="edit-emergency-name">Full Name</label>
+        <input type="text" id="edit-emergency-name" class="form-control" placeholder="Enter contact's full name">
+        <div class="form-error" id="edit-emergency-name-error">Please enter a valid name</div>
+      </div>
+      <div class="form-group">
+        <label for="edit-emergency-relationship">Relationship</label>
+        <input type="text" id="edit-emergency-relationship" class="form-control" placeholder="Enter relationship">
+      </div>
+      <div class="form-group">
+        <label for="edit-emergency-phone">Phone Number</label>
+        <input type="tel" id="edit-emergency-phone" class="form-control" placeholder="Enter contact's phone number">
+        <div class="form-error" id="edit-emergency-phone-error">Please enter a valid phone number</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-emergency-contact-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-emergency-contact-btn">Save Changes</button>
+    </div>
+  </div
+</div>
+
+<!-- Password Modal -->
+<div id="password-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Change Password</h3>
+      <span class="close-modal" id="close-password-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="current-password">Current Password</label>
+        <input type="password" id="current-password" class="form-control" placeholder="Enter current password">
+        <div class="form-error" id="current-password-error">Please enter your current password</div>
+      </div>
+      <div class="form-group">
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" class="form-control" placeholder="Enter new password">
+        <div class="form-error" id="new-password-error">Password must be at least 6 characters with letters and numbers</div>
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" class="form-control" placeholder="Confirm new password">
+        <div class="form-error" id="confirm-password-error">Passwords don't match</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-password-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-password-btn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Device Modal -->
+<div id="device-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Add New Device</h3>
+      <span class="close-modal" id="close-device-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="device-type">Device Type</label>
+        <select id="device-type" class="form-control">
+          <option value="">Select a device type</option>
+          <option value="fitness-tracker">Fitness Tracker</option>
+          <option value="bp-monitor">Blood Pressure Monitor</option>
+          <option value="glucose-monitor">Glucose Monitor</option>
+          <option value="scale">Smart Scale</option>
+          <option value="other">Other</option>
+        </select>
+        <div class="form-error" id="device-type-error">Please select a device type</div>
+      </div>
+      <div class="form-group" id="other-device-group" style="display: none;">
+        <label for="other-device">Specify Device</label>
+        <input type="text" id="other-device" class="form-control" placeholder="Enter device name">
+        <div class="form-error" id="other-device-error">Please enter a device name</div>
+      </div>
+      <div class="form-group">
+        <label for="device-model">Model (Optional)</label>
+        <input type="text" id="device-model" class="form-control" placeholder="Enter device model">
+      </div>
+      <div class="form-text" style="margin-top: 1rem;">
+        To pair your device, please make sure it is in pairing mode and within range.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-device-btn">Cancel</button>
+      <button class="btn btn-primary" id="pair-device-btn">Pair Device</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Profile</h3>
+      <span class="close-modal" id="close-profile-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="profile-name">Full Name</label>
+        <input type="text" id="profile-name" class="form-control" placeholder="Enter your full name">
+        <div class="form-error" id="profile-name-error">Please enter a valid name</div>
+      </div>
+      <div class="form-group">
+        <label for="profile-email">Email</label>
+        <input type="email" id="profile-email" class="form-control" placeholder="Enter your email">
+        <div class="form-error" id="profile-email-error">Please enter a valid email address</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-profile-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-profile-btn">Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-spinner"></div>
+</div>
+
+<!-- Notification -->
+<div id="notification" class="notification">Notification message</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">📊</div>
+    Dashboard
+  </a>
+  <a href="trends.html" class="nav-item">
+    <div class="nav-icon">📈</div>
+    Trends
+  </a>
+  <a href="medications.html" class="nav-item">
+    <div class="nav-icon">💊</div>
+    Medications
+  </a>
+  <a href="providers.html" class="nav-item">
+    <div class="nav-icon">👨‍⚕️</div>
+    Providers
+  </a>
+  <a href="settings.html" class="nav-item active">
+    <div class="nav-icon">⚙️</div>
+    Settings
+  </a>
+</div>
+
+<script>
+  // Settings data
+  const settingsData = {
+    profile: {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      phone: '(555) 123-4567'
+    },
+    health: {
+      height: {
+        feet: 5,
+        inches: 10
+      },
+      weight: 165,
+      bloodType: 'A+'
+    },
+    conditions: {
+      healthConditions: 'Hypertension',
+      allergies: 'Penicillin'
+    },
+    emergency: {
+      name: 'Jane Doe',
+      relationship: 'Spouse',
+      phone: '(555) 987-6543'
+    },
+    devices: [
+      {
+        id: 1,
+        name: 'Fitbit Charge 5',
+        type: 'fitness-tracker',
+        status: 'connected',
+        lastSync: 'Today, 9:15 AM'
+      },
+      {
+        id: 2,
+        name: 'Omron Blood Pressure Monitor',
+        type: 'bp-monitor',
+        status: 'connected',
+        lastSync: 'Yesterday, 8:30 PM'
+      }
+    ],
+    preferences: {
+      medReminders: true,
+      appointmentReminders: true,
+      healthInsights: true,
+      shareWithProviders: true,
+      anonymizedResearch: false
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check for logged in user and update profile
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+      try {
+        const userData = JSON.parse(loggedInUser);
+        if (userData.name) {
+          document.getElementById('username').textContent = userData.name;
+          settingsData.profile.name = userData.name;
+          document.getElementById('settings-name').textContent = userData.name;
+          
+          // Get initials for avatar
+          const initials = userData.name.split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase();
+          document.getElementById('user-avatar').textContent = initials;
+        }
+        if (userData.email) {
+          settingsData.profile.email = userData.email;
+          document.getElementById('settings-email').textContent = userData.email;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    
+    // Initialize settings data from localStorage
+    const storedSettings = localStorage.getItem('userSettings');
+    if (storedSettings) {
+      try {
+        const parsedSettings = JSON.parse(storedSettings);
+        
+        // Update settings data
+        if (parsedSettings.profile) {
+          Object.assign(settingsData.profile, parsedSettings.profile);
+        }
+        if (parsedSettings.health) {
+          Object.assign(settingsData.health, parsedSettings.health);
+        }
+        if (parsedSettings.conditions) {
+          Object.assign(settingsData.conditions, parsedSettings.conditions);
+        }
+        if (parsedSettings.emergency) {
+          Object.assign(settingsData.emergency, parsedSettings.emergency);
+        }
+        if (parsedSettings.preferences) {
+          Object.assign(settingsData.preferences, parsedSettings.preferences);
+        }
+        if (parsedSettings.devices) {
+          settingsData.devices = parsedSettings.devices;
+        }
+        
+        // Update UI
+        updateSettingsUI();
+      } catch (error) {
+        console.error('Error parsing settings data:', error);
+      }
+    }
+    
+    // Initialize toggle event listeners
+    setupToggleListeners();
+    
+    // User profile button
+    const userProfile = document.getElementById('user-profile');
+    userProfile.addEventListener('click', function() {
+      openProfileModal();
+    });
+    
+    // Profile info edit button
+    const editProfileInfoBtn = document.getElementById('edit-profile-info-btn');
+    editProfileInfoBtn.addEventListener('click', function() {
+      openProfileInfoModal();
+    });
+    
+    // Health metrics edit button
+    const editHealthMetricsBtn = document.getElementById('edit-health-metrics-btn');
+    editHealthMetricsBtn.addEventListener('click', function() {
+      openHealthMetricsModal();
+    });
+    
+    // Health conditions edit button
+    const editHealthConditionsBtn = document.getElementById('edit-health-conditions-btn');
+    editHealthConditionsBtn.addEventListener('click', function() {
+      openHealthConditionsModal();
+    });
+    
+    // Emergency contact edit button
+    const editEmergencyContactBtn = document.getElementById('edit-emergency-contact-btn');
+    editEmergencyContactBtn.addEventListener('click', function() {
+      openEmergencyContactModal();
+    });
+    
+    // Change password button
+    const changePasswordBtn = document.getElementById('change-password-btn');
+    changePasswordBtn.addEventListener('click', function() {
+      openPasswordModal();
+    });
+    
+    // Add device button
+    const addDeviceBtn = document.getElementById('add-device-btn');
+    addDeviceBtn.addEventListener('click', function() {
+      openDeviceModal();
+    });
+    
+    // Export health data button
+    const exportHealthDataBtn = document.getElementById('export-health-data-btn');
+    exportHealthDataBtn.addEventListener('click', function() {
+      exportHealthData();
+    });
+    
+    // Delete account button
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    deleteAccountBtn.addEventListener('click', function() {
+      confirmDeleteAccount();
+    });
+    
+    // Logout button
+    const logoutBtn = document.getElementById('logout-btn');
+    logoutBtn.addEventListener('click', function() {
+      logout();
+    });
+    
+    // Sync device buttons
+    const syncDevice1Btn = document.getElementById('sync-device-1');
+    syncDevice1Btn.addEventListener('click', function() {
+      syncDevice(1);
+    });
+    
+    const syncDevice2Btn = document.getElementById('sync-device-2');
+    syncDevice2Btn.addEventListener('click', function() {
+      syncDevice(2);
+    });
+    
+    // Disconnect device buttons
+    const disconnectDevice1Btn = document.getElementById('disconnect-device-1');
+    disconnectDevice1Btn.addEventListener('click', function() {
+      disconnectDevice(1);
+    });
+    
+    const disconnectDevice2Btn = document.getElementById('disconnect-device-2');
+    disconnectDevice2Btn.addEventListener('click', function() {
+      disconnectDevice(2);
+    });
+    
+    // Set up modal close buttons
+    setupModalCloseButtons();
+    
+    // Set up device type select change event
+    const deviceTypeSelect = document.getElementById('device-type');
+    deviceTypeSelect.addEventListener('change', function() {
+      const otherDeviceGroup = document.getElementById('other-device-group');
+      if (this.value === 'other') {
+        otherDeviceGroup.style.display = 'block';
+      } else {
+        otherDeviceGroup.style.display = 'none';
+      }
+    });
+  });
+
+  // Setup toggle listeners
+  function setupToggleListeners() {
+    // Notification preferences
+    document.getElementById('med-reminders-toggle').addEventListener('change', function() {
+      settingsData.preferences.medReminders = this.checked;
+      saveSettings();
+      showNotification('Medication reminders ' + (this.checked ? 'enabled' : 'disabled'));
+    });
+    
+    document.getElementById('appointment-reminders-toggle').addEventListener('change', function() {
+      settingsData.preferences.appointmentReminders = this.checked;
+      saveSettings();
+      showNotification('Appointment reminders ' + (this.checked ? 'enabled' : 'disabled'));
+    });
+    
+    document.getElementById('insights-toggle').addEventListener('change', function() {
+      settingsData.preferences.healthInsights = this.checked;
+      saveSettings();
+      showNotification('Health insights ' + (this.checked ? 'enabled' : 'disabled'));
+    });
+    
+    // Privacy settings
+    document.getElementById('share-providers-toggle').addEventListener('change', function() {
+      settingsData.preferences.shareWithProviders = this.checked;
+      saveSettings();
+      showNotification('Provider data sharing ' + (this.checked ? 'enabled' : 'disabled'));
+    });
+    
+    document.getElementById('research-toggle').addEventListener('change', function() {
+      settingsData.preferences.anonymizedResearch = this.checked;
+      saveSettings();
+      showNotification('Anonymized research data sharing ' + (this.checked ? 'enabled' : 'disabled'));
+    });
+    
+    // Two-factor authentication
+    document.getElementById('tfa-toggle').addEventListener('change', function() {
+      if (this.checked) {
+        showNotification('Two-factor authentication enabled');
+      } else {
+        showNotification('Two-factor authentication disabled');
+      }
+    });
+  }
+
+  // Setup modal close buttons
+  function setupModalCloseButtons() {
+    // Profile info modal
+    document.getElementById('close-profile-info-modal').addEventListener('click', function() {
+      document.getElementById('profile-info-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-profile-info-btn').addEventListener('click', function() {
+      document.getElementById('profile-info-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-profile-info-btn').addEventListener('click', function() {
+      saveProfileInfo();
+    });
+    
+    // Health metrics modal
+    document.getElementById('close-health-metrics-modal').addEventListener('click', function() {
+      document.getElementById('health-metrics-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-health-metrics-btn').addEventListener('click', function() {
+      document.getElementById('health-metrics-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-health-metrics-btn').addEventListener('click', function() {
+      saveHealthMetrics();
+    });
+    
+    // Health conditions modal
+    document.getElementById('close-health-conditions-modal').addEventListener('click', function() {
+      document.getElementById('health-conditions-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-health-conditions-btn').addEventListener('click', function() {
+      document.getElementById('health-conditions-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-health-conditions-btn').addEventListener('click', function() {
+      saveHealthConditions();
+    });
+    
+    // Emergency contact modal
+    document.getElementById('close-emergency-contact-modal').addEventListener('click', function() {
+      document.getElementById('emergency-contact-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-emergency-contact-btn').addEventListener('click', function() {
+      document.getElementById('emergency-contact-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-emergency-contact-btn').addEventListener('click', function() {
+      saveEmergencyContact();
+    });
+    
+    // Password modal
+    document.getElementById('close-password-modal').addEventListener('click', function() {
+      document.getElementById('password-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-password-btn').addEventListener('click', function() {
+      document.getElementById('password-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-password-btn').addEventListener('click', function() {
+      savePassword();
+    });
+    
+    // Profile modal
+    document.getElementById('close-profile-modal').addEventListener('click', function() {
+      document.getElementById('profile-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-profile-btn').addEventListener('click', function() {
+      document.getElementById('profile-modal').style.display = 'none';
+    });
+    
+    document.getElementById('save-profile-btn').addEventListener('click', function() {
+      saveProfile();
+    });
+    
+    // Device modal
+    document.getElementById('close-device-modal').addEventListener('click', function() {
+      document.getElementById('device-modal').style.display = 'none';
+    });
+    
+    document.getElementById('cancel-device-btn').addEventListener('click', function() {
+      document.getElementById('device-modal').style.display = 'none';
+    });
+    
+    document.getElementById('pair-device-btn').addEventListener('click', function() {
+      pairDevice();
+    });
+    
+    // Close modals if clicked outside
+    window.addEventListener('click', function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Update settings UI
+  function updateSettingsUI() {
+    // Profile information
+    document.getElementById('settings-name').textContent = settingsData.profile.name;
+    document.getElementById('settings-email').textContent = settingsData.profile.email;
+    document.getElementById('settings-phone').textContent = settingsData.profile.phone;
+    
+    // Health metrics
+    document.getElementById('settings-height').textContent = 
+      `${settingsData.health.height.feet}' ${settingsData.health.height.inches}"`;
+    document.getElementById('settings-weight').textContent = `${settingsData.health.weight} lbs`;
+    document.getElementById('settings-blood-type').textContent = settingsData.health.bloodType;
+    
+    // Health conditions
+    document.getElementById('settings-conditions').textContent = 
+      settingsData.conditions.healthConditions || 'None';
+    document.getElementById('settings-allergies').textContent = 
+      settingsData.conditions.allergies || 'None';
+    
+    // Emergency contact
+    document.getElementById('settings-emergency-name').textContent = settingsData.emergency.name;
+    document.getElementById('settings-emergency-relationship').textContent = settingsData.emergency.relationship;
+    document.getElementById('settings-emergency-phone').textContent = settingsData.emergency.phone;
+    
+    // Notification preferences
+    document.getElementById('med-reminders-toggle').checked = settingsData.preferences.medReminders;
+    document.getElementById('appointment-reminders-toggle').checked = settingsData.preferences.appointmentReminders;
+    document.getElementById('insights-toggle').checked = settingsData.preferences.healthInsights;
+    
+    // Privacy settings
+    document.getElementById('share-providers-toggle').checked = settingsData.preferences.shareWithProviders;
+    document.getElementById('research-toggle').checked = settingsData.preferences.anonymizedResearch;
+    
+    // Update devices list
+    updateDevicesList();
+  }
+
+  // Update devices list
+  function updateDevicesList() {
+    const devicesList = document.getElementById('devices-list');
+    devicesList.innerHTML = '';
+    
+    if (settingsData.devices.length === 0) {
+      devicesList.innerHTML = '<div style="padding: 1rem; color: var(--gray-500);">No devices connected</div>';
+      return;
+    }
+    
+    settingsData.devices.forEach(device => {
+      const deviceItem = document.createElement('div');
+      deviceItem.className = 'device-item';
+      
+      deviceItem.innerHTML = `
+        <div class="device-info">
+          <div class="device-name">${device.name}</div>
+          <div class="device-status">Connected</div>
+          <div class="device-last-sync">Last synced: ${device.lastSync}</div>
+        </div>
+        <div class="device-actions">
+          <button class="btn btn-primary" id="sync-device-${device.id}" data-device-id="${device.id}">Sync Now</button>
+          <button class="btn btn-secondary" id="disconnect-device-${device.id}" data-device-id="${device.id}">Disconnect</button>
+        </div>
+      `;
+      
+      devicesList.appendChild(deviceItem);
+      
+      // Add event listeners
+      document.getElementById(`sync-device-${device.id}`).addEventListener('click', function() {
+        syncDevice(device.id);
+      });
+      
+      document.getElementById(`disconnect-device-${device.id}`).addEventListener('click', function() {
+        disconnectDevice(device.id);
+      });
+    });
+  }
+
+  // Save settings to localStorage
+  function saveSettings() {
+    localStorage.setItem('userSettings', JSON.stringify(settingsData));
+  }
+
+  // Open profile info modal
+  function openProfileInfoModal() {
+    document.getElementById('edit-name').value = settingsData.profile.name;
+    document.getElementById('edit-email').value = settingsData.profile.email;
+    document.getElementById('edit-phone').value = settingsData.profile.phone;
+    
+    document.getElementById('profile-info-modal').style.display = 'block';
+  }
+
+  // Save profile info
+  function saveProfileInfo() {
+    const name = document.getElementById('edit-name').value.trim();
+    const email = document.getElementById('edit-email').value.trim();
+    const phone = document.getElementById('edit-phone').value.trim();
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (!name) {
+      document.getElementById('edit-name-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-name-error').style.display = 'none';
+    }
+    
+    if (email && !validateEmail(email)) {
+      document.getElementById('edit-email-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-email-error').style.display = 'none';
+    }
+    
+    if (phone && !validatePhone(phone)) {
+      document.getElementById('edit-phone-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-phone-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    // Update settings
+    settingsData.profile.name = name;
+    settingsData.profile.email = email;
+    settingsData.profile.phone = phone;
+    
+    // Update user data in localStorage
+    updateUserData(name, email);
+    
+    // Update UI
+    updateSettingsUI();
+    
+    // Save settings
+    saveSettings();
+    
+    // Close modal
+    document.getElementById('profile-info-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Profile information updated');
+  }
+
+  // Open health metrics modal
+  function openHealthMetricsModal() {
+    document.getElementById('edit-height-ft').value = settingsData.health.height.feet;
+    document.getElementById('edit-height-in').value = settingsData.health.height.inches;
+    document.getElementById('edit-weight').value = settingsData.health.weight;
+    document.getElementById('edit-blood-type').value = settingsData.health.bloodType;
+    
+    document.getElementById('health-metrics-modal').style.display = 'block';
+  }
+
+  // Save health metrics
+  function saveHealthMetrics() {
+    const feet = parseInt(document.getElementById('edit-height-ft').value);
+    const inches = parseInt(document.getElementById('edit-height-in').value);
+    const weight = parseInt(document.getElementById('edit-weight').value);
+    const bloodType = document.getElementById('edit-blood-type').value;
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (isNaN(feet) || feet < 1 || feet > 8) {
+      document.getElementById('edit-height-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-height-error').style.display = 'none';
+    }
+    
+    if (isNaN(inches) || inches < 0 || inches > 11) {
+      document.getElementById('edit-height-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-height-error').style.display = 'none';
+    }
+    
+    if (isNaN(weight) || weight < 1 || weight > 1000) {
+      document.getElementById('edit-weight-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-weight-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    // Update settings
+    settingsData.health.height.feet = feet;
+    settingsData.health.height.inches = inches;
+    settingsData.health.weight = weight;
+    settingsData.health.bloodType = bloodType;
+    
+    // Update UI
+    updateSettingsUI();
+    
+    // Save settings
+    saveSettings();
+    
+    // Close modal
+    document.getElementById('health-metrics-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Health metrics updated');
+  }
+
+  // Open health conditions modal
+  function openHealthConditionsModal() {
+    document.getElementById('edit-conditions').value = settingsData.conditions.healthConditions;
+    document.getElementById('edit-allergies').value = settingsData.conditions.allergies;
+    
+    document.getElementById('health-conditions-modal').style.display = 'block';
+  }
+
+  // Save health conditions
+  function saveHealthConditions() {
+    const conditions = document.getElementById('edit-conditions').value.trim();
+    const allergies = document.getElementById('edit-allergies').value.trim();
+    
+    // Update settings
+    settingsData.conditions.healthConditions = conditions;
+    settingsData.conditions.allergies = allergies;
+    
+    // Update UI
+    updateSettingsUI();
+    
+    // Save settings
+    saveSettings();
+    
+    // Close modal
+    document.getElementById('health-conditions-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Health conditions updated');
+  }
+
+  // Open emergency contact modal
+  function openEmergencyContactModal() {
+    document.getElementById('edit-emergency-name').value = settingsData.emergency.name;
+    document.getElementById('edit-emergency-relationship').value = settingsData.emergency.relationship;
+    document.getElementById('edit-emergency-phone').value = settingsData.emergency.phone;
+    
+    document.getElementById('emergency-contact-modal').style.display = 'block';
+  }
+
+  // Save emergency contact
+  function saveEmergencyContact() {
+    const name = document.getElementById('edit-emergency-name').value.trim();
+    const relationship = document.getElementById('edit-emergency-relationship').value.trim();
+    const phone = document.getElementById('edit-emergency-phone').value.trim();
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (!name) {
+      document.getElementById('edit-emergency-name-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-emergency-name-error').style.display = 'none';
+    }
+    
+    if (!phone || !validatePhone(phone)) {
+      document.getElementById('edit-emergency-phone-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('edit-emergency-phone-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    // Update settings
+    settingsData.emergency.name = name;
+    settingsData.emergency.relationship = relationship;
+    settingsData.emergency.phone = phone;
+    
+    // Update UI
+    updateSettingsUI();
+    
+    // Save settings
+    saveSettings();
+    
+    // Close modal
+    document.getElementById('emergency-contact-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Emergency contact updated');
+  }
+
+  // Open password modal
+  function openPasswordModal() {
+    document.getElementById('current-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    
+    document.getElementById('password-modal').style.display = 'block';
+  }
+
+  // Save password
+  function savePassword() {
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (!currentPassword) {
+      document.getElementById('current-password-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('current-password-error').style.display = 'none';
+    }
+    
+    if (!newPassword || newPassword.length < 6) {
+      document.getElementById('new-password-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('new-password-error').style.display = 'none';
+    }
+    
+    if (!confirmPassword || confirmPassword !== newPassword) {
+      document.getElementById('confirm-password-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('confirm-password-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    // Close modal
+    document.getElementById('password-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Password updated successfully');
+  }
+
+  // Open profile modal
+  function openProfileModal() {
+    // Get user data
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+ try {
+        const userData = JSON.parse(loggedInUser);
+        document.getElementById('profile-name').value = userData.name || '';
+        document.getElementById('profile-email').value = userData.email || '';
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    
+    document.getElementById('profile-modal').style.display = 'block';
+  }
+
+  // Save profile
+  function saveProfile() {
+    const name = document.getElementById('profile-name').value.trim();
+    const email = document.getElementById('profile-email').value.trim();
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (!name) {
+      document.getElementById('profile-name-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('profile-name-error').style.display = 'none';
+    }
+    
+    if (email && !validateEmail(email)) {
+      document.getElementById('profile-email-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('profile-email-error').style.display = 'none';
+    }
+    
+    if (!isValid) return;
+    
+    // Update user data in localStorage
+    updateUserData(name, email);
+    
+    // Update settings
+    settingsData.profile.name = name;
+    settingsData.profile.email = email;
+    
+    // Update UI
+    updateSettingsUI();
+    
+    // Update header
+    document.getElementById('username').textContent = name;
+    document.getElementById('user-avatar').textContent = getInitials(name);
+    
+    // Save settings
+    saveSettings();
+    
+    // Close modal
+    document.getElementById('profile-modal').style.display = 'none';
+    
+    // Show notification
+    showNotification('Profile updated successfully');
+  }
+
+  // Open device modal
+  function openDeviceModal() {
+    document.getElementById('device-type').value = '';
+    document.getElementById('other-device-group').style.display = 'none';
+    document.getElementById('other-device').value = '';
+    document.getElementById('device-model').value = '';
+    
+    document.getElementById('device-modal').style.display = 'block';
+  }
+
+  // Pair device
+  function pairDevice() {
+    const deviceType = document.getElementById('device-type').value;
+    const deviceModel = document.getElementById('device-model').value.trim();
+    let deviceName = '';
+    
+    // Validate inputs
+    let isValid = true;
+    
+    if (!deviceType) {
+      document.getElementById('device-type-error').style.display = 'block';
+      isValid = false;
+    } else {
+      document.getElementById('device-type-error').style.display = 'none';
+    }
+    
+    if (deviceType === 'other') {
+      const otherDevice = document.getElementById('other-device').value.trim();
+      if (!otherDevice) {
+        document.getElementById('other-device-error').style.display = 'block';
+        isValid = false;
+      } else {
+        document.getElementById('other-device-error').style.display = 'none';
+        deviceName = otherDevice;
+      }
+    } else if (deviceType) {
+      const deviceNames = {
+        'fitness-tracker': 'Fitness Tracker',
+        'bp-monitor': 'Blood Pressure Monitor',
+        'glucose-monitor': 'Glucose Monitor',
+        'scale': 'Smart Scale'
+      };
+      deviceName = deviceNames[deviceType] || 'Unknown Device';
+    }
+    
+    if (!isValid) return;
+    
+    // Add model if provided
+    if (deviceModel) {
+      deviceName += ' ' + deviceModel;
+    }
+    
+    // Show loading
+    showLoading();
+    
+    // Simulate pairing process
+    setTimeout(function() {
+      // Create new device
+      const newId = settingsData.devices.length > 0 ? 
+        Math.max(...settingsData.devices.map(d => d.id)) + 1 : 1;
+      
+      const newDevice = {
+        id: newId,
+        name: deviceName,
+        type: deviceType,
+        status: 'connected',
+        lastSync: 'Just now'
+      };
+      
+      // Add device to settings
+      settingsData.devices.push(newDevice);
+      
+      // Update UI
+      updateDevicesList();
+      
+      // Save settings
+      saveSettings();
+      
+      // Hide loading
+      hideLoading();
+      
+      // Close modal
+      document.getElementById('device-modal').style.display = 'none';
+      
+      // Show notification
+      showNotification(`${deviceName} paired successfully`);
+    }, 2000);
+  }
+
+  // Sync device
+  function syncDevice(deviceId) {
+    const device = settingsData.devices.find(d => d.id === deviceId);
+    if (!device) return;
+    
+    // Show loading
+    showLoading();
+    
+    // Simulate sync process
+    setTimeout(function() {
+      // Update last sync time
+      device.lastSync = 'Just now';
+      
+      // Update UI
+      updateDevicesList();
+      
+      // Save settings
+      saveSettings();
+      
+      // Hide loading
+      hideLoading();
+      
+      // Show notification
+      showNotification(`${device.name} synced successfully`);
+    }, 2000);
+  }
+
+  // Disconnect device
+  function disconnectDevice(deviceId) {
+    const device = settingsData.devices.find(d => d.id === deviceId);
+    if (!device) return;
+    
+    if (confirm(`Are you sure you want to disconnect ${device.name}?`)) {
+      // Remove device from settings
+      settingsData.devices = settingsData.devices.filter(d => d.id !== deviceId);
+      
+      // Update UI
+      updateDevicesList();
+      
+      // Save settings
+      saveSettings();
+      
+      // Show notification
+      showNotification(`${device.name} disconnected successfully`);
+    }
+  }
+
+  // Export health data
+  function exportHealthData() {
+    // Show loading
+    showLoading();
+    
+    // Simulate export process
+    setTimeout(function() {
+      // Create export data
+      const exportData = {
+        profile: settingsData.profile,
+        health: settingsData.health,
+        conditions: settingsData.conditions,
+        emergency: settingsData.emergency,
+        exportDate: new Date().toISOString()
+      };
+      
+      // Create download link
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "health_data_export.json");
+      
+      // Append to body and click
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      
+      // Hide loading
+      hideLoading();
+      
+      // Show notification
+      showNotification('Health data exported successfully');
+    }, 2000);
+  }
+
+  // Confirm delete account
+  function confirmDeleteAccount() {
+    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      if (confirm('ALL YOUR DATA WILL BE PERMANENTLY DELETED. Are you absolutely sure?')) {
+        // Show loading
+        showLoading();
+        
+        // Simulate deletion process
+        setTimeout(function() {
+          // Remove user data from localStorage
+          localStorage.removeItem('loggedInUser');
+          localStorage.removeItem('userSettings');
+          
+          // Hide loading
+          hideLoading();
+          
+          // Show notification
+          showNotification('Account deleted successfully');
+          
+          // Redirect to login page after a brief delay
+          setTimeout(function() {
+            window.location.href = 'index.html';
+          }, 2000);
+        }, 2000);
+      }
+    }
+  }
+
+  // Logout
+  function logout() {
+    // Remove user data from localStorage
+    localStorage.removeItem('loggedInUser');
+    
+    // Redirect to login page
+    window.location.href = 'index.html';
+  }
+
+  // Update user data in localStorage
+  function updateUserData(name, email) {
+    try {
+      let userData = {};
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      
+      if (loggedInUser) {
+        userData = JSON.parse(loggedInUser);
+      }
+      
+      userData.name = name;
+      if (email) {
+        userData.email = email;
+      }
+      
+      localStorage.setItem('loggedInUser', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  }
+
+  // Show loading overlay
+  function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+  }
+
+  // Hide loading overlay
+  function hideLoading() {
+    document.getElementById('loading-overlay').style.display = 'none';
+  }
+
+  // Show notification
+  function showNotification(message, isError = false) {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = 'notification' + (isError ? ' error' : '');
+    notification.classList.add('show');
+    
+    // Auto-hide after 3 seconds
+    setTimeout(function() {
+      notification.classList.remove('show');
+    }, 3000);
+  }
+
+  // Get initials from name
+  function getInitials(name) {
+    return name.split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase();
+  }
+
+  // Validate email
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  // Validate phone number
+  function validatePhone(phone) {
+    const re = /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+    return re.test(phone);
+  }
+</script>
+
+</body>
+</html>
