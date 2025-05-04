@@ -1,567 +1,1346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCC Health Dashboard - Medications</title>
-    <style>
-        /* Base Styles and Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-            padding-bottom: 70px;
-        }
-        
-        /* Header Styles */
-        .header {
-            background-color: #4361ee;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo-icon {
-            margin-right: 10px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #3a0ca3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        
-        /* Page Title */
-        .page-title {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #343a40;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        /* Card Styles */
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        
-        .card-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f1f3f5;
-        }
-        
-        .card-title {
-            font-weight: bold;
-            color: #343a40;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        
-        .card-title-icon {
-            margin-right: 8px;
-            color: #4361ee;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Medication List */
-        .med-list {
-            list-style: none;
-        }
-        
-        .med-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f1f3f5;
-        }
-        
-        .med-item:last-child {
-            border-bottom: none;
-        }
-        
-        .med-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .med-name {
-            font-weight: 600;
-            margin-bottom: 3px;
-            font-size: 1.1rem;
-        }
-        
-        .med-details {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        .med-time {
-            color: #4361ee;
-            font-weight: 500;
-            margin-top: 3px;
-        }
-        
-        .med-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .med-status.taken {
-            background-color: #e9f5ee;
-            color: #2a9d8f;
-        }
-        
-        .med-status.upcoming {
-            background-color: #fff7e6;
-            color: #ffba08;
-        }
-        
-        .med-status.missed {
-            background-color: #fdeeee;
-            color: #e63946;
-        }
-        
-        /* Button Styles */
-        .button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 0.9rem;
-        }
-        
-        .button-primary {
-            background-color: #4361ee;
-            color: white;
-        }
-        
-        .button-primary:hover {
-            background-color: #3a0ca3;
-        }
-        
-        .button-secondary {
-            background-color: #f1f3f5;
-            color: #6c757d;
-        }
-        
-        .button-secondary:hover {
-            background-color: #e9ecef;
-        }
-        
-        .button-success {
-            background-color: #2a9d8f;
-            color: white;
-        }
-        
-        .button-success:hover {
-            background-color: #1e7d73;
-        }
-        
-        /* Add Medication Form */
-        .add-medication {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #f1f3f5;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #4361ee;
-            outline: none;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        /* Navigation */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #6c757d;
-            text-decoration: none;
-            transition: color 0.3s;
-            cursor: pointer;
-        }
-        
-        .nav-item.active {
-            color: #4361ee;
-        }
-        
-        .nav-icon {
-            font-size: 1.5rem;
-            margin-bottom: 3px;
-        }
-        
-        .nav-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        
-        /* Updated navigation styles */
-        a.nav-item {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        a.nav-item:hover {
-            color: #4361ee;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .page-title {
-                font-size: 1.5rem;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Medications - DCC Health Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #4338ca;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      margin: 0;
+      padding-bottom: 70px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h2 {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: background-color 0.2s;
+    }
+
+    .user-profile:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--gray-50);
+    }
+
+    .med-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .med-item:last-child {
+      border-bottom: none;
+    }
+
+    .med-info {
+      flex: 1;
+    }
+
+    .med-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .med-time {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      margin-bottom: 0.25rem;
+    }
+
+    .med-notes {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+    }
+
+    .med-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+
+    .taken {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .upcoming {
+      background-color: var(--warning);
+      color: white;
+    }
+
+    .missed {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .action-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      background-color: var(--gray-100);
+      color: var(--gray-700);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--gray-300);
+    }
+
+    .action-btn:hover {
+      background-color: var(--gray-200);
+    }
+
+    .schedule-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-info {
+      flex: 1;
+    }
+
+    .schedule-details {
+      display: flex;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .schedule-label {
+      font-weight: 500;
+      width: 80px;
+      color: var(--gray-600);
+    }
+
+    .schedule-value {
+      color: var(--gray-700);
+    }
+
+    .schedule-status {
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+
+    .active {
+      background-color: var(--success);
+    }
+
+    .inactive {
+      background-color: var(--gray-400);
+    }
+
+    .history-date {
+      font-weight: 600;
+      padding: 0.75rem 0;
+      color: var(--gray-600);
+    }
+
+    .history-item {
+      display: flex;
+      margin-left: 1.5rem;
+      padding: 0.5rem 0;
+      position: relative;
+    }
+
+    .history-item::before {
+      content: '';
+      position: absolute;
+      left: -1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: var(--gray-200);
+    }
+
+    .history-time {
+      width: 80px;
+      font-size: 0.9rem;
+      color: var(--gray-500);
+    }
+
+    .history-content {
+      flex: 1;
+    }
+
+    .history-title {
+      font-weight: 500;
+    }
+
+    .history-details {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    select {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--gray-700);
+      background-color: white;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">🏥</span>
-                <span>DCC Dashboard</span>
-            </div>
-            <div class="user-profile" id="user-profile">
-                <div class="avatar" id="user-avatar">JD</div>
-                <span id="user-name">John Doe</span>
-            </div>
-        </div>
-    </header>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <div class="page-title">
-            <h1>Medications</h1>
-            <button class="button button-primary" id="add-med-btn">+ Add Medication</button>
-        </div>
-        
-        <!-- Today's Medications Card -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span class="card-title-icon">📅</span>
-                    <span>Today's Schedule</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <ul class="med-list">
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Lisinopril 20mg</div>
-                            <div class="med-details">Blood Pressure • Once Daily</div>
-                            <div class="med-time">8:00 AM</div>
-                        </div>
-                        <div class="med-status taken">Taken</div>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Metoprolol 25mg</div>
-                            <div class="med-details">Heart Rate • Twice Daily</div>
-                            <div class="med-time">8:00 AM</div>
-                        </div>
-                        <div class="med-status taken">Taken</div>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Aspirin 81mg</div>
-                            <div class="med-details">Blood Thinner • Once Daily</div>
-                            <div class="med-time">1:00 PM</div>
-                        </div>
-                        <div class="med-status upcoming">Upcoming</div>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Metoprolol 25mg</div>
-                            <div class="med-details">Heart Rate • Twice Daily</div>
-                            <div class="med-time">8:00 PM</div>
-                        </div>
-                        <div class="med-status upcoming">Upcoming</div>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Atorvastatin 40mg</div>
-                            <div class="med-details">Cholesterol • Once Daily</div>
-                            <div class="med-time">8:00 PM</div>
-                        </div>
-                        <div class="med-status upcoming">Upcoming</div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <!-- All Medications Card -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">
-                    <span class="card-title-icon">💊</span>
-                    <span>All Medications</span>
-                </div>
-            </div>
-            <div class="card-body">
-                <ul class="med-list">
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Lisinopril 20mg</div>
-                            <div class="med-details">Blood Pressure • Once Daily • 8:00 AM</div>
-                        </div>
-                        <button class="button button-secondary">Edit</button>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Metoprolol 25mg</div>
-                            <div class="med-details">Heart Rate • Twice Daily • 8:00 AM & 8:00 PM</div>
-                        </div>
-                        <button class="button button-secondary">Edit</button>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Aspirin 81mg</div>
-                            <div class="med-details">Blood Thinner • Once Daily • 1:00 PM</div>
-                        </div>
-                        <button class="button button-secondary">Edit</button>
-                    </li>
-                    
-                    <li class="med-item">
-                        <div class="med-info">
-                            <div class="med-name">Atorvastatin 40mg</div>
-                            <div class="med-details">Cholesterol • Once Daily • 8:00 PM</div>
-                        </div>
-                        <button class="button button-secondary">Edit</button>
-                    </li>
-                </ul>
-                
-                <!-- Add Medication Form (initially hidden) -->
-                <div id="add-medication-form" class="add-medication" style="display: none;">
-                    <h3 style="margin-bottom: 15px;">Add New Medication</h3>
-                    
-                    <div class="form-group">
-                        <label for="med-name">Medication Name</label>
-                        <input type="text" id="med-name" placeholder="Enter medication name">
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="med-dosage">Dosage</label>
-                            <input type="text" id="med-dosage" placeholder="e.g., 20mg">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="med-purpose">Purpose</label>
-                            <input type="text" id="med-purpose" placeholder="e.g., Blood Pressure">
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="med-frequency">Frequency</label>
-                            <select id="med-frequency">
-                                <option value="">Select frequency</option>
-                                <option value="once-daily">Once Daily</option>
-                                <option value="twice-daily">Twice Daily</option>
-                                <option value="three-times">Three Times Daily</option>
-                                <option value="as-needed">As Needed</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="med-time">Time</label>
-                            <input type="text" id="med-time" placeholder="e.g., 8:00 AM">
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button id="cancel-add-med" class="button button-secondary">Cancel</button>
-                        <button id="save-medication" class="button button-success">Save Medication</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<header>
+  <h2>Medications</h2>
+  <div class="user-profile" id="user-profile">
+    <div class="avatar" id="user-avatar">JD</div>
+    <div id="username">John Doe</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Today's Medications</h3>
+      <button class="btn btn-primary" id="add-medication-btn">Add Medication</button>
     </div>
     
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-item">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Dashboard</div>
-        </a>
-        <a href="trends.html" class="nav-item">
-            <div class="nav-icon">📈</div>
-            <div class="nav-label">Trends</div>
-        </a>
-        <a href="medications.html" class="nav-item active">
-            <div class="nav-icon">💊</div>
-            <div class="nav-label">Medications</div>
-        </a>
-        <a href="providers.html" class="nav-item">
-            <div class="nav-icon">👨‍⚕️</div>
-            <div class="nav-label">Providers</div>
-        </a>
-        <a href="index.html" class="nav-item">
-            <div class="nav-icon">🚪</div>
-            <div class="nav-label">Logout</div>
-        </a>
-    </nav>
+    <div id="medications-list">
+      <div class="med-item">
+        <div class="med-info">
+          <div class="med-name">Lisinopril 20mg</div>
+          <div class="med-time">8:00 AM • Blood Pressure</div>
+          <div class="med-notes">Take with food</div>
+        </div>
+        <div class="med-actions">
+          <button class="status-btn taken">Taken</button>
+          <button class="action-btn" data-med-id="1">Edit</button>
+        </div>
+      </div>
+      
+      <div class="med-item">
+        <div class="med-info">
+          <div class="med-name">Aspirin 81mg</div>
+          <div class="med-time">1:00 PM • Blood Thinner</div>
+          <div class="med-notes">Take after lunch</div>
+        </div>
+        <div class="med-actions">
+          <button class="status-btn upcoming" data-med-id="2">Take</button>
+          <button class="action-btn" data-med-id="2">Edit</button>
+        </div>
+      </div>
+      
+      <div class="med-item">
+        <div class="med-info">
+          <div class="med-name">Metoprolol 25mg</div>
+          <div class="med-time">8:00 PM • Heart Rate</div>
+          <div class="med-notes">Take before bedtime</div>
+        </div>
+        <div class="med-actions">
+          <button class="status-btn missed" data-med-id="3">Missed</button>
+          <button class="action-btn" data-med-id="3">Edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Medication Schedule</h3>
+      <select id="schedule-filter">
+        <option value="all">All Medications</option>
+        <option value="active">Active Medications</option>
+        <option value="inactive">Inactive Medications</option>
+      </select>
+    </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load user data
-            const userDataString = localStorage.getItem('user');
+    <div id="schedule-list">
+      <div class="schedule-item">
+        <div class="schedule-info">
+          <div class="med-name">Lisinopril 20mg</div>
+          <div class="schedule-details">
+            <span class="schedule-label">Schedule:</span>
+            <span class="schedule-value">Daily at 8:00 AM</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Purpose:</span>
+            <span class="schedule-value">Blood Pressure Control</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Start Date:</span>
+            <span class="schedule-value">Jan 15, 2025</span>
+          </div>
+        </div>
+        <div class="schedule-status">
+          <span class="status-indicator active"></span>
+          Active
+        </div>
+      </div>
+      
+      <div class="schedule-item">
+        <div class="schedule-info">
+          <div class="med-name">Aspirin 81mg</div>
+          <div class="schedule-details">
+            <span class="schedule-label">Schedule:</span>
+            <span class="schedule-value">Daily at 1:00 PM</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Purpose:</span>
+            <span class="schedule-value">Blood Thinner</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Start Date:</span>
+            <span class="schedule-value">Feb 20, 2025</span>
+          </div>
+        </div>
+        <div class="schedule-status">
+          <span class="status-indicator active"></span>
+          Active
+        </div>
+      </div>
+      
+      <div class="schedule-item">
+        <div class="schedule-info">
+          <div class="med-name">Metoprolol 25mg</div>
+          <div class="schedule-details">
+            <span class="schedule-label">Schedule:</span>
+            <span class="schedule-value">Daily at 8:00 PM</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Purpose:</span>
+            <span class="schedule-value">Heart Rate Control</span>
+          </div>
+          <div class="schedule-details">
+            <span class="schedule-label">Start Date:</span>
+            <span class="schedule-value">Mar 5, 2025</span>
+          </div>
+        </div>
+        <div class="schedule-status">
+          <span class="status-indicator active"></span>
+          Active
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Medication History</h3>
+    </div>
+    
+    <div id="history-list">
+      <div class="history-date">Today, May 1, 2025</div>
+      <div class="history-item">
+        <div class="history-time">8:05 AM</div>
+        <div class="history-content">
+          <div class="history-title">Lisinopril 20mg</div>
+          <div class="history-details">Taken</div>
+        </div>
+      </div>
+      
+      <div class="history-date">Yesterday, April 30, 2025</div>
+      <div class="history-item">
+        <div class="history-time">8:12 AM</div>
+        <div class="history-content">
+          <div class="history-title">Lisinopril 20mg</div>
+          <div class="history-details">Taken</div>
+        </div>
+      </div>
+      <div class="history-item">
+        <div class="history-time">1:23 PM</div>
+        <div class="history-content">
+          <div class="history-title">Aspirin 81mg</div>
+          <div class="history-details">Taken</div>
+        </div>
+      </div>
+      <div class="history-item">
+        <div class="history-time">8:45 PM</div>
+        <div class="history-content">
+          <div class="history-title">Metoprolol 25mg</div>
+          <div class="history-details">Taken</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Medication Modal -->
+<div id="medication-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="medication-modal-title">Add Medication</h3>
+      <span class="close-modal" id="close-medication-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="medication-name">Medication Name</label>
+        <input type="text" id="medication-name" class="form-control" placeholder="Enter medication name">
+      </div>
+      <div class="form-group">
+        <label for="medication-dosage">Dosage</label>
+        <input type="text" id="medication-dosage" class="form-control" placeholder="e.g., 20mg">
+      </div>
+      <div class="form-group">
+        <label for="medication-purpose">Purpose</label>
+        <input type="text" id="medication-purpose" class="form-control" placeholder="What is this medication for?">
+      </div>
+      <div class="form-group">
+        <label for="medication-schedule">Schedule</label>
+        <select id="medication-schedule" class="form-control">
+          <option value="daily">Daily</option>
+          <option value="twice">Twice Daily</option>
+          <option value="three">Three Times Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="custom">Custom Schedule</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="medication-time">Time</label>
+        <input type="time" id="medication-time" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="medication-start">Start Date</label>
+        <input type="date" id="medication-start" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="medication-end">End Date (Optional)</label>
+        <input type="date" id="medication-end" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="medication-notes">Notes (Optional)</label>
+        <textarea id="medication-notes" class="form-control" rows="3" placeholder="Additional notes about this medication"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-medication-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-medication-btn">Save Medication</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Profile</h3>
+      <span class="close-modal" id="close-profile-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="profile-name">Full Name</label>
+        <input type="text" id="profile-name" class="form-control" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="profile-email">Email</label>
+        <input type="email" id="profile-email" class="form-control" placeholder="Enter your email">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-profile-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-profile-btn">Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item">
+    <div class="nav-icon">📊</div>
+    Dashboard
+  </a>
+  <a href="trends.html" class="nav-item">
+    <div class="nav-icon">📈</div>
+    Trends
+  </a>
+  <a href="medications.html" class="nav-item active">
+    <div class="nav-icon">💊</div>
+    Medications
+  </a>
+  <a href="providers.html" class="nav-item">
+    <div class="nav-icon">👨‍⚕️</div>
+    Providers
+  </a>
+  <a href="settings.html" class="nav-item">
+    <div class="nav-icon">⚙️</div>
+    Settings
+  </a>
+</div>
+
+<script>
+  // Store medications data
+  let medications = [
+    {
+      id: 1,
+      name: 'Lisinopril',
+      dosage: '20mg',
+      purpose: 'Blood Pressure',
+      schedule: 'daily',
+      time: '08:00',
+      startDate: '2025-01-15',
+      endDate: '',
+      notes: 'Take with food',
+      status: 'taken'
+    },
+    {
+      id: 2,
+      name: 'Aspirin',
+      dosage: '81mg',
+      purpose: 'Blood Thinner',
+      schedule: 'daily',
+      time: '13:00',
+      startDate: '2025-02-20',
+      endDate: '',
+      notes: 'Take after lunch',
+      status: 'upcoming'
+    },
+    {
+      id: 3,
+      name: 'Metoprolol',
+      dosage: '25mg',
+      purpose: 'Heart Rate',
+      schedule: 'daily',
+      time: '20:00',
+      startDate: '2025-03-05',
+      endDate: '',
+      notes: 'Take before bedtime',
+      status: 'missed'
+    }
+  ];
+
+  // Store history data
+  let history = [
+    {
+      date: 'Today, May 1, 2025',
+      items: [
+        {
+          time: '8:05 AM',
+          medication: 'Lisinopril 20mg',
+          status: 'Taken'
+        }
+      ]
+    },
+    {
+      date: 'Yesterday, April 30, 2025',
+      items: [
+        {
+          time: '8:12 AM',
+          medication: 'Lisinopril 20mg',
+          status: 'Taken'
+        },
+        {
+          time: '1:23 PM',
+          medication: 'Aspirin 81mg',
+          status: 'Taken'
+        },
+        {
+          time: '8:45 PM',
+          medication: 'Metoprolol 25mg',
+          status: 'Taken'
+        }
+      ]
+    }
+  ];
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize elements
+    const userProfile = document.getElementById('user-profile');
+    const profileModal = document.getElementById('profile-modal');
+    const closeProfileModal = document.getElementById('close-profile-modal');
+    const cancelProfileBtn = document.getElementById('cancel-profile-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const profileNameInput = document.getElementById('profile-name');
+    const profileEmailInput = document.getElementById('profile-email');
+    
+    const addMedicationBtn = document.getElementById('add-medication-btn');
+    const medicationModal = document.getElementById('medication-modal');
+    const closeMedicationModal = document.getElementById('close-medication-modal');
+    const cancelMedicationBtn = document.getElementById('cancel-medication-btn');
+    const saveMedicationBtn = document.getElementById('save-medication-btn');
+    const medicationModalTitle = document.getElementById('medication-modal-title');
+    
+    const scheduleFilter = document.getElementById('schedule-filter');
+    
+    // Check for logged in user and update profile
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+      try {
+        const userData = JSON.parse(loggedInUser);
+        if (userData.name) {
+          document.getElementById('username').textContent = userData.name;
+          // Get initials for avatar
+          const initials = userData.name.split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase();
+          document.getElementById('user-avatar').textContent = initials;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    
+    // Medication status buttons
+    document.querySelectorAll('.status-btn').forEach(button => {
+      if (!button.classList.contains('taken')) {
+        button.addEventListener('click', function() {
+          const medId = this.getAttribute('data-med-id');
+          const medication = medications.find(med => med.id === parseInt(medId));
+          
+          if (medication) {
+            // Update status to taken
+            medication.status = 'taken';
+            this.classList.remove('upcoming', 'missed');
+            this.classList.add('taken');
+            this.textContent = 'Taken';
             
-            if (userDataString) {
-                try {
-                    const userData = JSON.parse(userDataString);
-                    
-                    if (userData.name) {
-                        document.getElementById('user-name').textContent = userData.name;
-                        
-                        const initials = userData.name.split(' ')
-                            .map(name => name[0])
-                            .join('')
-                            .toUpperCase();
-                        
-                        document.getElementById('user-avatar').textContent = initials;
-                    }
-                } catch (error) {
-                    console.error('Error parsing user data:', error);
-                }
+            // Add to history
+            const today = new Date();
+            const time = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Check if today exists in history
+            let todayHistory = history.find(h => h.date === 'Today, May 1, 2025');
+            if (!todayHistory) {
+              todayHistory = {
+                date: 'Today, May 1, 2025',
+                items: []
+              };
+              history.unshift(todayHistory);
             }
             
-            // Add Medication Form Toggle
-            document.getElementById('add-med-btn').addEventListener('click', function() {
-                document.getElementById('add-medication-form').style.display = 'block';
-                this.style.display = 'none';
+            // Add item to today's history
+            todayHistory.items.push({
+              time: time,
+              medication: `${medication.name} ${medication.dosage}`,
+              status: 'Taken'
             });
             
-            document.getElementById('cancel-add-med').addEventListener('click', function() {
-                document.getElementById('add-medication-form').style.display = 'none';
-                document.getElementById('add-med-btn').style.display = 'block';
-            });
+            // Update history display
+            renderHistory();
             
-            document.getElementById('save-medication').addEventListener('click', function() {
-                // For demo purposes, just hide the form and show a message
-                document.getElementById('add-medication-form').style.display = 'none';
-                document.getElementById('add-med-btn').style.display = 'block';
-                
-                alert('Medication saved successfully!');
-            });
+            // Show temporary notification
+            alert(`Marked ${medication.name} ${medication.dosage} as taken!`);
+          }
         });
-    </script>
+      }
+    });
+    
+    // Edit medication buttons
+    document.querySelectorAll('.action-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const medId = this.getAttribute('data-med-id');
+        const medication = medications.find(med => med.id === parseInt(medId));
+        
+        if (medication) {
+          // Set modal title to edit
+          medicationModalTitle.textContent = 'Edit Medication';
+          
+          // Populate form with medication data
+          document.getElementById('medication-name').value = medication.name;
+          document.getElementById('medication-dosage').value = medication.dosage;
+          document.getElementById('medication-purpose').value = medication.purpose;
+          document.getElementById('medication-schedule').value = medication.schedule;
+          document.getElementById('medication-time').value = medication.time;
+          document.getElementById('medication-start').value = medication.startDate;
+          document.getElementById('medication-end').value = medication.endDate || '';
+          document.getElementById('medication-notes').value = medication.notes;
+          
+          // Store the medication ID for saving
+          saveMedicationBtn.setAttribute('data-med-id', medId);
+          
+          // Show the modal
+          medicationModal.style.display = 'block';
+        }
+      });
+    });
+    
+    // Add medication button
+    addMedicationBtn.addEventListener('click', function() {
+      // Set modal title to add
+      medicationModalTitle.textContent = 'Add Medication';
+      
+      // Clear form
+      document.getElementById('medication-name').value = '';
+      document.getElementById('medication-dosage').value = '';
+      document.getElementById('medication-purpose').value = '';
+      document.getElementById('medication-schedule').value = 'daily';
+      document.getElementById('medication-time').value = '';
+      document.getElementById('medication-start').value = '';
+      document.getElementById('medication-end').value = '';
+      document.getElementById('medication-notes').value = '';
+      
+      // Remove any stored medication ID
+      saveMedicationBtn.removeAttribute('data-med-id');
+      
+      // Show the modal
+      medicationModal.style.display = 'block';
+    });
+    
+    // Close medication modal
+    closeMedicationModal.addEventListener('click', function() {
+      medicationModal.style.display = 'none';
+    });
+    
+    // Cancel medication button
+    cancelMedicationBtn.addEventListener('click', function() {
+      medicationModal.style.display = 'none';
+    });
+    
+    // Save medication button
+    saveMedicationBtn.addEventListener('click', function() {
+      // Get form values
+      const name = document.getElementById('medication-name').value.trim();
+      const dosage = document.getElementById('medication-dosage').value.trim();
+      const purpose = document.getElementById('medication-purpose').value.trim();
+      const schedule = document.getElementById('medication-schedule').value;
+      const time = document.getElementById('medication-time').value;
+      const startDate = document.getElementById('medication-start').value;
+      const endDate = document.getElementById('medication-end').value;
+      const notes = document.getElementById('medication-notes').value.trim();
+      
+      // Validate required fields
+      if (!name || !dosage || !purpose || !time || !startDate) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Check if editing or adding
+      const medId = this.getAttribute('data-med-id');
+      
+      if (medId) {
+        // Editing existing medication
+        const medicationIndex = medications.findIndex(med => med.id === parseInt(medId));
+        
+        if (medicationIndex !== -1) {
+          medications[medicationIndex] = {
+            ...medications[medicationIndex],
+            name,
+            dosage,
+            purpose,
+            schedule,
+            time,
+            startDate,
+            endDate,
+            notes
+          };
+          
+          // Show temporary notification
+          alert(`Updated ${name} ${dosage}`);
+        }
+      } else {
+        // Adding new medication
+        const newId = medications.length > 0 ? Math.max(...medications.map(med => med.id)) + 1 : 1;
+        
+        const newMedication = {
+          id: newId,
+          name,
+          dosage,
+          purpose,
+          schedule,
+          time,
+          startDate,
+          endDate,
+          notes,
+          status: 'upcoming'
+        };
+        
+        medications.push(newMedication);
+        
+        // Show temporary notification
+        alert(`Added ${name} ${dosage}`);
+      }
+      
+      // Update medications display
+      renderMedications();
+      renderSchedule();
+      
+      // Close the modal
+      medicationModal.style.display = 'none';
+    });
+    
+    // Schedule filter
+    scheduleFilter.addEventListener('change', function() {
+      renderSchedule();
+    });
+    
+    // Open profile modal when user profile is clicked
+    userProfile.addEventListener('click', function() {
+      // Populate form with current user data
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        try {
+          const userData = JSON.parse(loggedInUser);
+          profileNameInput.value = userData.name || '';
+          profileEmailInput.value = userData.email || '';
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+      
+      profileModal.style.display = 'block';
+    });
+    
+    // Close profile modal
+    closeProfileModal.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Cancel profile button
+    cancelProfileBtn.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Save profile button
+    saveProfileBtn.addEventListener('click', function() {
+      const name = profileNameInput.value.trim();
+      const email = profileEmailInput.value.trim();
+      
+      if (name === '') {
+        alert('Please enter your name');
+        return;
+      }
+      
+      // Save to localStorage
+      try {
+        let userData = {};
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        
+        if (loggedInUser) {
+          userData = JSON.parse(loggedInUser);
+        }
+        
+        userData.name = name;
+        if (email !== '') {
+          userData.email = email;
+        }
+        
+        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+        
+        // Update display
+        document.getElementById('username').textContent = name;
+        
+        // Update avatar with initials
+        const initials = name.split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase();
+        document.getElementById('user-avatar').textContent = initials;
+        
+        // Close modal
+        profileModal.style.display = 'none';
+        
+        // Show temporary notification
+        alert('Profile updated successfully');
+      } catch (error) {
+        console.error('Error saving profile data:', error);
+        alert('An error occurred while saving your profile');
+      }
+    });
+    
+    // Close modals if clicked outside
+    window.addEventListener('click', function(event) {
+      if (event.target === medicationModal) {
+        medicationModal.style.display = 'none';
+      }
+      if (event.target === profileModal) {
+        profileModal.style.display = 'none';
+      }
+    });
+    
+    // Function to render medications
+    function renderMedications() {
+      const medicationsList = document.getElementById('medications-list');
+      medicationsList.innerHTML = '';
+      
+      medications.forEach(med => {
+        const medItem = document.createElement('div');
+        medItem.className = 'med-item';
+        
+        const timeStr = formatTime(med.time);
+        
+        medItem.innerHTML = `
+          <div class="med-info">
+            <div class="med-name">${med.name} ${med.dosage}</div>
+            <div class="med-time">${timeStr} • ${med.purpose}</div>
+            <div class="med-notes">${med.notes}</div>
+          </div>
+          <div class="med-actions">
+            <button class="status-btn ${med.status}" data-med-id="${med.id}">${getStatusText(med.status)}</button>
+            <button class="action-btn" data-med-id="${med.id}">Edit</button>
+          </div>
+        `;
+        
+        medicationsList.appendChild(medItem);
+      });
+      
+      // Re-attach event listeners
+      document.querySelectorAll('.status-btn:not(.taken)').forEach(button => {
+        button.addEventListener('click', function() {
+          const medId = this.getAttribute('data-med-id');
+          const medication = medications.find(med => med.id === parseInt(medId));
+          
+          if (medication) {
+            // Update status to taken
+            medication.status = 'taken';
+            this.classList.remove('upcoming', 'missed');
+            this.classList.add('taken');
+            this.textContent = 'Taken';
+            
+            // Add to history
+            const today = new Date();
+            const time = today.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Check if today exists in history
+            let todayHistory = history.find(h => h.date === 'Today, May 1, 2025');
+            if (!todayHistory) {
+              todayHistory = {
+                date: 'Today, May 1, 2025',
+                items: []
+              };
+              history.unshift(todayHistory);
+            }
+            
+            // Add item to today's history
+            todayHistory.items.push({
+              time: time,
+              medication: `${medication.name} ${medication.dosage}`,
+              status: 'Taken'
+            });
+            
+            // Update history display
+            renderHistory();
+            
+            // Show temporary notification
+            alert(`Marked ${medication.name} ${medication.dosage} as taken!`);
+          }
+        });
+      });
+      
+      document.querySelectorAll('.action-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const medId = this.getAttribute('data-med-id');
+          const medication = medications.find(med => med.id === parseInt(medId));
+          
+          if (medication) {
+            // Set modal title to edit
+            medicationModalTitle.textContent = 'Edit Medication';
+            
+            // Populate form with medication data
+            document.getElementById('medication-name').value = medication.name;
+            document.getElementById('medication-dosage').value = medication.dosage;
+            document.getElementById('medication-purpose').value = medication.purpose;
+            document.getElementById('medication-schedule').value = medication.schedule;
+            document.getElementById('medication-time').value = medication.time;
+            document.getElementById('medication-start').value = medication.startDate;
+            document.getElementById('medication-end').value = medication.endDate || '';
+            document.getElementById('medication-notes').value = medication.notes;
+            
+            // Store the medication ID for saving
+            saveMedicationBtn.setAttribute('data-med-id', medId);
+            
+            // Show the modal
+            medicationModal.style.display = 'block';
+          }
+        });
+      });
+    }
+    
+    // Function to render schedule
+    function renderSchedule() {
+      const scheduleList = document.getElementById('schedule-list');
+      scheduleList.innerHTML = '';
+      
+      const filter = scheduleFilter.value;
+      
+      let filteredMeds = medications;
+      
+      if (filter === 'active') {
+        filteredMeds = medications.filter(med => !med.endDate || new Date(med.endDate) >= new Date());
+      } else if (filter === 'inactive') {
+        filteredMeds = medications.filter(med => med.endDate && new Date(med.endDate) < new Date());
+      }
+      
+      filteredMeds.forEach(med => {
+        const scheduleItem = document.createElement('div');
+        scheduleItem.className = 'schedule-item';
+        
+        const isActive = !med.endDate || new Date(med.endDate) >= new Date();
+        
+        const scheduleText = getScheduleText(med.schedule, med.time);
+        
+        scheduleItem.innerHTML = `
+          <div class="schedule-info">
+            <div class="med-name">${med.name} ${med.dosage}</div>
+            <div class="schedule-details">
+              <span class="schedule-label">Schedule:</span>
+              <span class="schedule-value">${scheduleText}</span>
+            </div>
+            <div class="schedule-details">
+              <span class="schedule-label">Purpose:</span>
+              <span class="schedule-value">${med.purpose}</span>
+            </div>
+            <div class="schedule-details">
+              <span class="schedule-label">Start Date:</span>
+              <span class="schedule-value">${formatDate(med.startDate)}</span>
+            </div>
+            ${med.endDate ? `
+            <div class="schedule-details">
+              <span class="schedule-label">End Date:</span>
+              <span class="schedule-value">${formatDate(med.endDate)}</span>
+            </div>
+            ` : ''}
+          </div>
+          <div class="schedule-status">
+            <span class="status-indicator ${isActive ? 'active' : 'inactive'}"></span>
+            ${isActive ? 'Active' : 'Inactive'}
+          </div>
+        `;
+        
+        scheduleList.appendChild(scheduleItem);
+      });
+    }
+    
+    // Function to render history
+    function renderHistory() {
+      const historyList = document.getElementById('history-list');
+      historyList.innerHTML = '';
+      
+      history.forEach(historyDay => {
+        const historyDate = document.createElement('div');
+        historyDate.className = 'history-date';
+        historyDate.textContent = historyDay.date;
+        historyList.appendChild(historyDate);
+        
+        historyDay.items.forEach(item => {
+          const historyItem = document.createElement('div');
+          historyItem.className = 'history-item';
+          
+          historyItem.innerHTML = `
+            <div class="history-time">${item.time}</div>
+            <div class="history-content">
+              <div class="history-title">${item.medication}</div>
+              <div class="history-details">${item.status}</div>
+            </div>
+          `;
+          
+          historyList.appendChild(historyItem);
+        });
+      });
+    }
+    
+    // Helper function to format time
+    function formatTime(timeStr) {
+      if (!timeStr) return '';
+      
+      try {
+        const [hours, minutes] = timeStr.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        
+        return `${hour12}:${minutes} ${ampm}`;
+      } catch (error) {
+        return timeStr;
+      }
+    }
+    
+    // Helper function to format date
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      
+      try {
+        const date = new Date(dateStr);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+      } catch (error) {
+        return dateStr;
+      }
+    }
+    
+    // Helper function to get status text
+    function getStatusText(status) {
+      switch (status) {
+        case 'taken':
+          return 'Taken';
+        case 'upcoming':
+          return 'Take';
+        case 'missed':
+          return 'Missed';
+        default:
+          return status;
+      }
+    }
+    
+    // Helper function to get schedule text
+    function getScheduleText(schedule, time) {
+      const timeStr = formatTime(time);
+      
+      switch (schedule) {
+        case 'daily':
+          return `Daily at ${timeStr}`;
+        case 'twice':
+          return `Twice Daily`;
+        case 'three':
+          return `Three Times Daily`;
+        case 'weekly':
+          return `Weekly`;
+        case 'custom':
+          return `Custom Schedule`;
+        default:
+          return schedule;
+      }
+    }
+  });
+</script>
+
 </body>
 </html>
