@@ -16,7 +16,7 @@ The DCC Health Dashboard is a web-based application designed to provide users wi
 
 ## Screenshots
 
-![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Login.png)
+![Login Screen](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/Login1.png)
 ![Create_Account Profile](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount1.png)
 ![Create Account DOB](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount2.png)
 ![Create Account Health_data](https://raw.githubusercontent.com/roopesh20/Project-DCC-Dashboard/main/CreateAccount3.png)
