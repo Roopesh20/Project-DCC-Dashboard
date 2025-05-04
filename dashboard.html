@@ -1,440 +1,883 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCC Health Dashboard</title>
-    <style>
-        /* Base Styles and Reset */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-            padding-bottom: 70px;
-        }
-        
-        /* Header Styles */
-        .header {
-            background-color: #4361ee;
-            color: white;
-            padding: 15px 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo-icon {
-            margin-right: 10px;
-        }
-        
-        .user-profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #3a0ca3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        
-        /* Grid Layout */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        /* Card Styles */
-        .card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f1f3f5;
-        }
-        
-        .card-title {
-            font-weight: bold;
-            color: #343a40;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        
-        .card-title-icon {
-            margin-right: 8px;
-            color: #4361ee;
-        }
-        
-        .card-actions button {
-            background: none;
-            border: none;
-            color: #4361ee;
-            cursor: pointer;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .card-actions button:hover {
-            color: #3a0ca3;
-            text-decoration: underline;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        /* Vital Statistics */
-        .vital-stats {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .vital-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-right: 10px;
-            line-height: 1;
-        }
-        
-        .vital-details {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .vital-unit {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        .vital-change {
-            display: flex;
-            align-items: center;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .vital-change.up {
-            color: #e63946;
-        }
-        
-        .vital-change.down {
-            color: #2a9d8f;
-        }
-        
-        .vital-change.stable {
-            color: #6c757d;
-        }
-        
-        /* Navigation */
-        .nav-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #6c757d;
-            text-decoration: none;
-            transition: color 0.3s;
-            cursor: pointer;
-        }
-        
-        .nav-item.active {
-            color: #4361ee;
-        }
-        
-        .nav-icon {
-            font-size: 1.5rem;
-            margin-bottom: 3px;
-        }
-        
-        .nav-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        
-        /* Updated navigation styles */
-        a.nav-item {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        a.nav-item:hover {
-            color: #4361ee;
-        }
-        
-        /* Button Styles */
-        .button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .button-primary {
-            background-color: #4361ee;
-            color: white;
-        }
-        
-        .button-primary:hover {
-            background-color: #3a0ca3;
-        }
-        
-        .button-secondary {
-            background-color: #f1f3f5;
-            color: #6c757d;
-        }
-        
-        .button-secondary:hover {
-            background-color: #e9ecef;
-        }
-        
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .vital-value {
-                font-size: 2rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>DCC Health Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --primary-dark: #4338ca;
+      --secondary: #0ea5e9;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #3b82f6;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-800);
+      margin: 0;
+      padding-bottom: 70px;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: white;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    header h2 {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin: 0;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      transition: background-color 0.2s;
+    }
+
+    .user-profile:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .metric-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .metric-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .history-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+
+    .metric-unit {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-change {
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      margin-bottom: 1rem;
+    }
+
+    .metric-update {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+    }
+
+    .heart-icon {
+      color: var(--danger);
+    }
+
+    .bp-icon {
+      color: var(--info);
+    }
+
+    .weight-icon {
+      color: var(--success);
+    }
+
+    .device-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .device-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 1rem;
+    }
+
+    .device-status {
+      margin: 1rem 0;
+      font-size: 1rem;
+      color: var(--gray-600);
+    }
+
+    .connect-btn {
+      display: inline-block;
+      background-color: var(--gray-200);
+      color: var(--gray-700);
+      padding: 0.6rem 1.25rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .connect-btn:hover {
+      background-color: var(--gray-300);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--gray-700);
+      border: 1px solid var(--gray-300);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--gray-50);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 2rem;
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .close-modal {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray-500);
+    }
+
+    .modal-body {
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-300);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--primary);
+      animation: spin 1s linear infinite;
+      margin: 1rem auto;
+    }
+
+    .checkmark {
+      display: none;
+      width: 80px;
+      height: 80px;
+      margin: 1rem auto;
+      border-radius: 50%;
+      background-color: #f0fdf4;
+      position: relative;
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2310b981' stroke-width='3'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7' /%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.75rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 10;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.5rem;
+    }
+
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    .history-list {
+      margin-top: 1rem;
+    }
+    
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .history-item:last-child {
+      border-bottom: none;
+    }
+    
+    .history-date {
+      font-weight: 500;
+    }
+    
+    .history-value {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    
+    .history-time {
+      color: var(--gray-500);
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-icon">🏥</span>
-                <span>DCC Dashboard</span>
-            </div>
-            <div class="user-profile" id="user-profile">
-                <div class="avatar" id="user-avatar">JD</div>
-                <span id="user-name">John Doe</span>
-            </div>
+
+<header>
+  <h2>DCC Dashboard</h2>
+  <div class="user-profile" id="user-profile">
+    <div class="avatar" id="user-avatar">JD</div>
+    <div id="username">John Doe</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">
+          <span class="heart-icon">❤️</span>
+          <span>Heart Rate</span>
         </div>
-    </header>
-    
-    <!-- Main Dashboard Content -->
-    <div class="container">
-        <div class="grid">
-            <!-- Heart Rate Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-title-icon">❤️</span>
-                        <span>Heart Rate</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="history-btn">History</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="vital-stats">
-                        <div class="vital-value">72</div>
-                        <div class="vital-details">
-                            <div class="vital-unit">bpm</div>
-                            <div class="vital-change stable">
-                                <span>•</span>
-                                <span>No change</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p>Last updated: Today, 10:45 AM</p>
-                </div>
-            </div>
-            
-            <!-- Blood Pressure Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-title-icon">🩸</span>
-                        <span>Blood Pressure</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="history-btn">History</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="vital-stats">
-                        <div class="vital-value">120/80</div>
-                        <div class="vital-details">
-                            <div class="vital-unit">mmHg</div>
-                            <div class="vital-change down">
-                                <span>↓</span>
-                                <span>5 from yesterday</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p>Last updated: Today, 10:45 AM</p>
-                </div>
-            </div>
-            
-            <!-- Weight Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-title-icon">⚖️</span>
-                        <span>Weight</span>
-                    </div>
-                    <div class="card-actions">
-                        <button class="history-btn">History</button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="vital-stats">
-                        <div class="vital-value">165</div>
-                        <div class="vital-details">
-                            <div class="vital-unit">lbs</div>
-                            <div class="vital-change stable">
-                                <span>•</span>
-                                <span>No change</span>
-                            </div>
-                        </div>
-                    </div>
-                    <p>Last updated: Yesterday, 8:30 PM</p>
-                </div>
-            </div>
-            
-            <!-- Device Connection Card -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span class="card-title-icon">📱</span>
-                        <span>Connect Device</span>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <p style="margin-bottom: 15px;">Connect your health monitoring device to automatically sync your data.</p>
-                    <button id="connect-device-btn" class="button button-primary">Connect Device</button>
-                </div>
-            </div>
-        </div>
+        <a href="#" class="history-link" data-type="heart">History</a>
+      </div>
+      <div class="metric-value" id="heart-rate">--</div>
+      <div class="metric-unit">bpm</div>
+      <div class="metric-change">• No change</div>
+      <div class="metric-update">Last updated: --</div>
     </div>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">
+          <span class="bp-icon">🩸</span>
+          <span>Blood Pressure</span>
+        </div>
+        <a href="#" class="history-link" data-type="bp">History</a>
+      </div>
+      <div class="metric-value" id="blood-pressure">--/--</div>
+      <div class="metric-unit">mmHg</div>
+      <div class="metric-change">↓ 5 from yesterday</div>
+      <div class="metric-update">Last updated: --</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-header">
+        <div class="metric-title">
+          <span class="weight-icon">⚖️</span>
+          <span>Weight</span>
+        </div>
+        <a href="#" class="history-link" data-type="weight">History</a>
+      </div>
+      <div class="metric-value" id="weight">--</div>
+      <div class="metric-unit">lbs</div>
+      <div class="metric-change">• No change</div>
+      <div class="metric-update">Last updated: --</div>
+    </div>
+  </div>
+
+  <div class="device-card">
+    <div class="device-header">
+      <span>📱</span>
+      <span>Connect Device</span>
+    </div>
+    <div class="device-status" id="device-status">Not Connected</div>
+    <button class="connect-btn" id="connect-button">Connect Device</button>
+  </div>
+</div>
+
+<!-- Searching Modal -->
+<div id="searching-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-title" id="modal-title">Searching for device...</div>
+    <div class="spinner" id="spinner"></div>
+    <div class="checkmark" id="checkmark"></div>
+    <div id="connection-status"></div>
+  </div>
+</div>
+
+<!-- Profile Modal -->
+<div id="profile-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Edit Profile</h3>
+      <span class="close-modal" id="close-profile-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="profile-name">Full Name</label>
+        <input type="text" id="profile-name" class="form-control" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="profile-email">Email</label>
+        <input type="email" id="profile-email" class="form-control" placeholder="Enter your email">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="cancel-profile-btn">Cancel</button>
+      <button class="btn btn-primary" id="save-profile-btn">Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div id="history-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="history-modal-title">Measurement History</h3>
+      <span class="close-modal" id="close-history-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="history-list" id="history-list">
+        <!-- History items will be populated here -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="close-history-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="dashboard.html" class="nav-item active">
+    <div class="nav-icon">📊</div>
+    Dashboard
+  </a>
+  <a href="trends.html" class="nav-item">
+    <div class="nav-icon">📈</div>
+    Trends
+  </a>
+  <a href="medications.html" class="nav-item">
+    <div class="nav-icon">💊</div>
+    Medications
+  </a>
+  <a href="providers.html" class="nav-item">
+    <div class="nav-icon">👨‍⚕️</div>
+    Providers
+  </a>
+  <a href="settings.html" class="nav-item">
+    <div class="nav-icon">⚙️</div>
+    Settings
+  </a>
+</div>
+
+<script>
+  // History data for each metric type
+  const historyData = {
+    heart: [
+      { date: 'May 1, 2025', value: '72 bpm', time: '8:30 AM' },
+      { date: 'April 30, 2025', value: '70 bpm', time: '7:45 AM' },
+      { date: 'April 29, 2025', value: '75 bpm', time: '9:15 AM' },
+      { date: 'April 28, 2025', value: '68 bpm', time: '8:10 AM' },
+      { date: 'April 27, 2025', value: '71 bpm', time: '8:00 AM' }
+    ],
+    bp: [
+      { date: 'May 1, 2025', value: '118/78 mmHg', time: '8:30 AM' },
+      { date: 'April 30, 2025', value: '120/80 mmHg', time: '7:45 AM' },
+      { date: 'April 29, 2025', value: '115/75 mmHg', time: '9:15 AM' },
+      { date: 'April 28, 2025', value: '118/76 mmHg', time: '8:10 AM' },
+      { date: 'April 27, 2025', value: '122/82 mmHg', time: '8:00 AM' }
+    ],
+    weight: [
+      { date: 'May 1, 2025', value: '165 lbs', time: '7:00 AM' },
+      { date: 'April 29, 2025', value: '166 lbs', time: '7:15 AM' },
+      { date: 'April 27, 2025', value: '164 lbs', time: '7:10 AM' },
+      { date: 'April 25, 2025', value: '165 lbs', time: '7:05 AM' },
+      { date: 'April 23, 2025', value: '166 lbs', time: '7:00 AM' }
+    ]
+  };
+
+  // Function to generate random values after connection
+  function generateRandomData() {
+    return {
+      heartRate: {
+        value: Math.floor(Math.random() * (80 - 55) + 55), // Random between 55-80
+        unit: 'bpm',
+        change: 'No change',
+        lastUpdated: '--'
+      },
+      bloodPressure: {
+        value: `${Math.floor(Math.random() * (130 - 90) + 90)}/${Math.floor(Math.random() * (85 - 60) + 60)}`,
+        unit: 'mmHg',
+        change: '↓ 5 from yesterday',
+        lastUpdated: '--'
+      },
+      weight: {
+        value: Math.floor(Math.random() * (170 - 150) + 150), // Random between 150-170
+        unit: 'lbs',
+        change: 'No change',
+        lastUpdated: '--'
+      }
+    };
+  }
+  
+  let mockData = {};
+  let isConnected = false;
+  let deviceName = 'Roopesh\'s Watch';
+  
+  // Initialize metrics with empty values
+  function initializeMetrics() {
+    document.getElementById('heart-rate').textContent = '--';
+    document.getElementById('blood-pressure').textContent = '--/--';
+    document.getElementById('weight').textContent = '--';
+  }
+
+  // Update device status display
+  function updateDeviceStatus() {
+    const deviceStatus = document.getElementById('device-status');
+    const connectButton = document.getElementById('connect-button');
     
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
-        <a href="dashboard.html" class="nav-item active">
-            <div class="nav-icon">📊</div>
-            <div class="nav-label">Dashboard</div>
-        </a>
-        <a href="trends.html" class="nav-item">
-            <div class="nav-icon">📈</div>
-            <div class="nav-label">Trends</div>
-        </a>
-        <a href="medications.html" class="nav-item">
-            <div class="nav-icon">💊</div>
-            <div class="nav-label">Medications</div>
-        </a>
-        <a href="providers.html" class="nav-item">
-            <div class="nav-icon">👨‍⚕️</div>
-            <div class="nav-label">Providers</div>
-        </a>
-        <a href="index.html" class="nav-item">
-            <div class="nav-icon">🚪</div>
-            <div class="nav-label">Logout</div>
-        </a>
-    </nav>
+    if (isConnected) {
+      deviceStatus.textContent = `Connected to ${deviceName}`;
+      connectButton.textContent = 'Disconnect';
+    } else {
+      deviceStatus.textContent = 'Not Connected';
+      connectButton.textContent = 'Connect Device';
+    }
+  }
+
+  // Update metrics with random values after connection
+  function updateMetricsWithRealValues() {
+    // Generate random data each time we connect
+    mockData = generateRandomData();
+    document.getElementById('heart-rate').textContent = mockData.heartRate.value;
+    document.getElementById('blood-pressure').textContent = mockData.bloodPressure.value;
+    document.getElementById('weight').textContent = mockData.weight.value;
     
-    <script>
-        // Load user data from localStorage (set during login)
-        document.addEventListener('DOMContentLoaded', function() {
-            const userDataString = localStorage.getItem('user');
-            
-            // Update user information if available
-            if (userDataString) {
-                try {
-                    const userData = JSON.parse(userDataString);
-                    
-                    // Update user name and avatar
-                    if (userData.name) {
-                        document.getElementById('user-name').textContent = userData.name;
-                        
-                        // Create initials for avatar
-                        const initials = userData.name.split(' ')
-                            .map(name => name[0])
-                            .join('')
-                            .toUpperCase();
-                        
-                        document.getElementById('user-avatar').textContent = initials;
-                    }
-                } catch (error) {
-                    console.error('Error parsing user data:', error);
-                }
-            }
-            
-            // Connect device button (placeholder for Bluetooth functionality)
-            document.getElementById('connect-device-btn').addEventListener('click', function() {
-                alert('Bluetooth connectivity will be implemented in the future.');
-            });
-        });
-    </script>
+    // Add new readings to history
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    
+    historyData.heart.unshift({
+      date: dateStr,
+      value: `${mockData.heartRate.value} bpm`,
+      time: timeStr
+    });
+    
+    historyData.bp.unshift({
+      date: dateStr,
+      value: `${mockData.bloodPressure.value} mmHg`,
+      time: timeStr
+    });
+    
+    historyData.weight.unshift({
+      date: dateStr,
+      value: `${mockData.weight.value} lbs`,
+      time: timeStr
+    });
+  }
+  
+  // Function to show history modal for a specific type
+  function showHistory(type) {
+    // Set modal title based on type
+    const titles = {
+      heart: 'Heart Rate History',
+      bp: 'Blood Pressure History',
+      weight: 'Weight History'
+    };
+    
+    document.getElementById('history-modal-title').textContent = titles[type];
+    
+    // Clear previous history
+    const historyList = document.getElementById('history-list');
+    historyList.innerHTML = '';
+    
+    // Add history items
+    historyData[type].forEach(item => {
+      const historyItem = document.createElement('div');
+      historyItem.className = 'history-item';
+      
+      historyItem.innerHTML = `
+        <div class="history-date">${item.date}</div>
+        <div class="history-value">${item.value}</div>
+        <div class="history-time">${item.time}</div>
+      `;
+      
+      historyList.appendChild(historyItem);
+    });
+    
+    // Show modal
+    document.getElementById('history-modal').style.display = 'block';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check for logged in user and update profile
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (loggedInUser) {
+      try {
+        const userData = JSON.parse(loggedInUser);
+        if (userData.name) {
+          document.getElementById('username').textContent = userData.name;
+          // Get initials for avatar
+          const initials = userData.name.split(' ')
+            .map(n => n[0])
+            .join('')
+            .toUpperCase();
+          document.getElementById('user-avatar').textContent = initials;
+        }
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+    
+    initializeMetrics();
+    updateDeviceStatus();
+
+    const connectButton = document.getElementById('connect-button');
+    const searchingModal = document.getElementById('searching-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const spinner = document.getElementById('spinner');
+    const checkmark = document.getElementById('checkmark');
+    const connectionStatus = document.getElementById('connection-status');
+    
+    // Profile modal elements
+    const userProfile = document.getElementById('user-profile');
+    const profileModal = document.getElementById('profile-modal');
+    const closeProfileModal = document.getElementById('close-profile-modal');
+    const cancelProfileBtn = document.getElementById('cancel-profile-btn');
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    const profileNameInput = document.getElementById('profile-name');
+    const profileEmailInput = document.getElementById('profile-email');
+    
+    // History modal elements
+    const historyModal = document.getElementById('history-modal');
+    const closeHistoryModal = document.getElementById('close-history-modal');
+    const closeHistoryBtn = document.getElementById('close-history-btn');
+    
+    // Set up history links
+    const historyLinks = document.querySelectorAll('.history-link');
+    historyLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const type = this.getAttribute('data-type');
+        showHistory(type);
+      });
+    });
+
+    connectButton.addEventListener('click', function() {
+      if (isConnected) {
+        // Disconnect the device
+        isConnected = false;
+        updateDeviceStatus();
+        initializeMetrics();
+        return;
+      }
+
+      // Show the searching modal
+      searchingModal.style.display = 'block';
+      modalTitle.textContent = 'Searching for device...';
+      spinner.style.display = 'block';
+      checkmark.style.display = 'none';
+      connectionStatus.textContent = '';
+
+      // Simulate searching and connecting
+      setTimeout(function() {
+        // Device found - update to connected
+        isConnected = true;
+        modalTitle.textContent = 'Connected!';
+        spinner.style.display = 'none';
+        checkmark.style.display = 'block';
+        connectionStatus.textContent = `Connected to ${deviceName}`;
+        
+        // Update device status and metrics
+        updateDeviceStatus();
+        updateMetricsWithRealValues();
+        
+        // Close the modal after a delay
+        setTimeout(function() {
+          searchingModal.style.display = 'none';
+        }, 2000);
+      }, 3000);
+    });
+    
+    // Open profile modal when user profile is clicked
+    userProfile.addEventListener('click', function() {
+      // Populate form with current user data
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        try {
+          const userData = JSON.parse(loggedInUser);
+          profileNameInput.value = userData.name || '';
+          profileEmailInput.value = userData.email || '';
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+      
+      profileModal.style.display = 'block';
+    });
+    
+    // Close profile modal when close button is clicked
+    closeProfileModal.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Close profile modal when cancel button is clicked
+    cancelProfileBtn.addEventListener('click', function() {
+      profileModal.style.display = 'none';
+    });
+    
+    // Save profile data when save button is clicked
+    saveProfileBtn.addEventListener('click', function() {
+      const name = profileNameInput.value.trim();
+      const email = profileEmailInput.value.trim();
+      
+      if (name === '') {
+        alert('Please enter your name');
+        return;
+      }
+      
+      // Save to localStorage
+      try {
+        let userData = {};
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        
+        if (loggedInUser) {
+          userData = JSON.parse(loggedInUser);
+        }
+        
+        userData.name = name;
+        if (email !== '') {
+          userData.email = email;
+        }
+        
+        localStorage.setItem('loggedInUser', JSON.stringify(userData));
+        
+        // Update display
+        document.getElementById('username').textContent = name;
+        
+        // Update avatar with initials
+        const initials = name.split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase();
+        document.getElementById('user-avatar').textContent = initials;
+        
+        // Close modal
+        profileModal.style.display = 'none';
+      } catch (error) {
+        console.error('Error saving profile data:', error);
+        alert('An error occurred while saving your profile');
+      }
+    });
+    
+    // History modal controls
+    closeHistoryModal.addEventListener('click', function() {
+      historyModal.style.display = 'none';
+    });
+    
+    closeHistoryBtn.addEventListener('click', function() {
+      historyModal.style.display = 'none';
+    });
+    
+    // Close modals if clicked outside
+    window.addEventListener('click', function(event) {
+      if (event.target === searchingModal) {
+        searchingModal.style.display = 'none';
+      }
+      if (event.target === profileModal) {
+        profileModal.style.display = 'none';
+      }
+      if (event.target === historyModal) {
+        historyModal.style.display = 'none';
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
